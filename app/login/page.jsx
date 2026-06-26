@@ -1,0 +1,12 @@
+"use client";
+import LoginForm from "../ui/LoginForm";
+import Box from '@mui/material/Box';
+
+export default function LoginPage() {
+
+  return (
+    <Box>
+        <LoginForm />
+    </Box>
+  );
+}

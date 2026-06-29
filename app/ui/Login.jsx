@@ -3,7 +3,8 @@
 import React from 'react'
 import './styles/login.css'
 import Box from '@mui/material/Box';
-import { auth, googleProvider } from "../lib/firebase";
+import { auth, googleProvider, db } from "../lib/firebase";
+import { doc, getDoc ,setDoc } from "firebase/firestore";
 import { signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -14,8 +15,8 @@ import { useRouter } from "next/navigation";
 
 export default function Login() {
   const [user, setUser] = useState(null);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const router = useRouter();
@@ -36,8 +37,8 @@ export default function Login() {
 
   const noramSignIn = async (e) => {
     e.preventDefault();
-    console.log("Attempting to sign in with email:", email);
-    signInWithEmailAndPassword(auth, email, password)
+    console.log("Attempting to sign in with email:", e.target.email.value);
+    signInWithEmailAndPassword(auth, e.target.email.value, e.target.password.value)
       .then((userCredential) => {
         const user = userCredential.user;
         console.log("Logged in user:", user);
@@ -51,7 +52,19 @@ export default function Login() {
   const handleSignIn = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
-      console.log("Logged in user:", result.user);
+      const userDocRef = doc(db, "users", result.user.uid);
+      const userDocSnap = await getDoc(userDocRef);
+      // update the user document in Firestore if user doesn't exist
+      if(!userDocSnap.exists()) {
+        await setDoc(userDocRef, {
+          uid: result.user.uid,
+          name: result.user.displayName,
+          email: result.user.email,
+          role: "user", // default role for google sign-in users
+          createdAt: new Date(),
+        });
+      }
+
     } catch (error) {
       console.error("Authentication error:", error);
     }
@@ -92,19 +105,16 @@ export default function Login() {
 
         <form className="login-form" onSubmit={noramSignIn}>
           <div className="form-fields">
-            {/* Email Field */}
             <Box className="form-field">
-              <label htmlFor="email-address" className="form-label">
+              <label htmlFor="email" className="form-label">
                 Email address
               </label>
               <input
-                id="email-address"
+                id="email"
                 type="email"
                 required
                 className="form-input"
                 placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
               />
             </Box>
 
@@ -118,8 +128,6 @@ export default function Login() {
                 required
                 className="form-input"
                 placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
               />
             </Box>
           </div>
@@ -135,7 +143,7 @@ export default function Login() {
             <div className="divider">
               <span className="divider-text">or</span>
             </div>
-            {/* Google Sign-In Button */}
+            {/* Google Sign-In */}
             <button
               className="btn-google"
               type="button"

@@ -5,7 +5,7 @@ import './styles/login.css';
 import Box from '@mui/material/Box';
 import { auth, googleProvider, db } from "../lib/firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { signInWithPopup, onAuthStateChanged } from "firebase/auth";
+import { signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -43,8 +43,18 @@ export default function Login() {
   const noramSignIn = async (data) => {
     setError("");
     signInWithEmailAndPassword(auth, data.email, data.password)
-      .then(() => {
-        router.push("/dashboard");
+      .then(async (userCredential) => {
+        const userDocRef = doc(db, "users", userCredential.user.uid);
+        const userDocSnap = await getDoc(userDocRef);
+        if (!userDocSnap.exists()) {
+          await signOut(auth);
+          setError("Your account has been deleted or does not exist.");
+        } else if (userDocSnap.data().disabled === true) {
+          await signOut(auth);
+          setError("Your account has been disabled by the administrator.");
+        } else {
+          router.push("/dashboard");
+        }
       })
       .catch((error) => {
         setError(error.message);
@@ -56,14 +66,20 @@ export default function Login() {
       const result = await signInWithPopup(auth, googleProvider);
       const userDocRef = doc(db, "users", result.user.uid);
       const userDocSnap = await getDoc(userDocRef);
-      if(!userDocSnap.exists()) {
-        await setDoc(userDocRef, {
-          uid: result.user.uid,
-          name: result.user.displayName,
-          email: result.user.email,
-          role: "user",
-          createdAt: new Date(),
-        });
+      if (userDocSnap.exists() && userDocSnap.data().disabled === true) {
+        await signOut(auth);
+        setError("Your account has been disabled by the administrator.");
+      } else {
+        if(!userDocSnap.exists()) {
+          await setDoc(userDocRef, {
+            uid: result.user.uid,
+            name: result.user.displayName,
+            email: result.user.email,
+            role: "user",
+            createdAt: new Date(),
+          });
+        }
+        router.push("/dashboard");
       }
     } catch (error) {
       console.error(error);

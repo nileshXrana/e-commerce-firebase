@@ -7,15 +7,26 @@ import "../page.css";
 
 const UserDashboard = () => {
   const [products, setProducts] = useState([]);
+  const [sellers, setSellers] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Subscribe to all users to map sellerId to seller name
+    const unsubscribeUsers = onSnapshot(collection(db, "users"), (snapshot) => {
+      const sellersMap = {};
+      snapshot.docs.forEach((doc) => {
+        const data = doc.data();
+        sellersMap[doc.id] = data.name || data.email || "Unknown Seller";
+      });
+      setSellers(sellersMap);
+    });
+
     const q = query(
       collection(db, "products"),
       where("show", "==", true)
     );
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+    const unsubscribeProducts = onSnapshot(q, (snapshot) => {
       const productsList = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -27,7 +38,10 @@ const UserDashboard = () => {
       setLoading(false);
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribeUsers();
+      unsubscribeProducts();
+    };
   }, []);
 
   if (loading) {
@@ -39,127 +53,33 @@ const UserDashboard = () => {
   }
 
   return (
-    <Box className="user-dashboard">
+    <Box className="main">
       <h2 className="user-title">Products</h2>
       
-      <div className="products-grid">
-        {products.length === 0 ? (
-          <p className="no-products-msg">No products are currently available.</p>
-        ) : (
-          <Box className="main">
-          <Box className="outer">
-            {products.map((product) => {
-              // const cartItem = cart.find(item => item.id === product.id);
-              // const isAdded = !!cartItem;
-              // const qty = cartItem ? cartItem.quantity : 0;
-
-              return (
-                <Box key={product.id} className="card">
-                  {/* <Snackbar
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    open={open}
-                    autoHideDuration={2000}
-                    onClose={handleClose}
-                    message="Item Added"
-                    action={action}
-                  /> */}
-                  {/* <Box className="image-container">
-                    <Image src={product.image} alt={product.title} width={150} height={150}
-                      className="image" />
-                  </Box> */}
-                  <Box className="card-content">
-                    <h2 className="title">{product.name}</h2>
-                    <Box className="card-detail">
-                      <p>{product.description}</p>
-                      <p className="price">${product.price.toFixed(2)}</p>
-
-                      {/* {!isAdded ? (
-                        <div>
-                          <Button
-                            className="addtocart block"
-                            variant="contained"
-                            onClick={() => {
-                              addToCart(product);
-                              handleClick();
-                            }}
-                          >
-                            Add to Cart
-                          </Button>
-                        </div>
-                      ) : (
-                        <Box className="qty-selector">
-                          <div>
-                            <button
-                              className="qty-btn"
-                              onClick={() => {
-                                decreaseQty(product.id)
-                              }}
-                              disabled={qty === 0}
-                            >
-                              -
-                            </button>
-                          </div>
-                          <span className="qty-text">{qty}</span>
-                          <button
-                            className="qty-btn"
-                            onClick={() => {
-                              addToCart(product);
-                            }}
-                          >
-                            +
-                          </button>
-                        </Box>
-                      )} */}
-                    </Box>
-                  </Box>
+      {products.length === 0 ? (
+        <p className="no-products-msg">No products are currently available.</p>
+      ) : (
+        <Box className="outer">
+          {products.map((product) => (
+            <Box key={product.id} className="card">
+              <Box className="image-container">
+                {product.image && (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img src={product.image} alt={product.name} className="image" />
+                )}
+              </Box>
+              <Box className="card-content">
+                <h2 className="title">{product.name}</h2>
+                <Box className="card-detail">
+                  <p className="seller-name">Seller: {sellers[product.sellerId] || "Loading..."}</p>
+                  <p className="description">{product.description || "No description provided."}</p>
+                  <p className="price">${product.price ? product.price.toFixed(2) : "0.00"}</p>
                 </Box>
-              );
-            })}
-          </Box>
-
-          {/* Pagination */}
-          {/* {totalPages > 1 && (
-            <Box className="pagination-container">
-              <Button
-                variant="outlined"
-                onClick={() => setCurrentPage(prev => prev - 1)}
-                disabled={currentPage === 1}
-                className="page-btn"
-              >
-                &lt;
-              </Button>
-
-              <span className="page-info">
-                Page {currentPage} of {totalPages}
-              </span>
-
-              <Button
-                variant="outlined"
-                onClick={() => setCurrentPage(prev => prev + 1)}
-                disabled={currentPage === totalPages}
-                className="page-btn"
-              >
-                &gt;
-              </Button>
+              </Box>
             </Box>
-          )} */}
+          ))}
         </Box>
-
-          // products.map((product) => (
-          //   <div key={product.id} className="product-card">
-          //     <div className="product-card-header">
-          //       <h3 className="product-card-name">{product.name}</h3>
-          //       <p className="product-card-description">
-          //         {product.description || "No description provided."}
-          //       </p>
-          //     </div>
-          //     <div className="product-card-footer">
-          //       <span className="product-card-price">${product.price ? product.price.toFixed(2) : "0.00"}</span>
-          //     </div>
-          //   </div>
-          // ))
-        )}
-      </div>
+      )}
     </Box>
   );
 };

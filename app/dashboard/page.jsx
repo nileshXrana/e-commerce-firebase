@@ -52,7 +52,9 @@ export default function UserRoleComponent() {
       {role === "user" && <UserDashboard />}
       {role === "seller" && <SellerDashboard sellerId={uid} />}
       {role === "admin" && <AdminDashboard />}
-      {(role === "Guest / Logged Out" || !role) && <p>Please log in to view the dashboard.</p>}
+      {(role === "Guest / Logged Out" || !role) && (
+        <p className="dashboard-message">Please log in to view the dashboard.</p>
+      )}
     </Box>
   );
 }

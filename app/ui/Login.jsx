@@ -1,27 +1,32 @@
 "use client";
 
-import React from 'react'
-import './styles/login.css'
+import React, { useEffect, useState } from 'react';
+import './styles/login.css';
 import Box from '@mui/material/Box';
 import { auth, googleProvider, db } from "../lib/firebase";
-import { doc, getDoc ,setDoc } from "firebase/firestore";
-import { signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { signInWithPopup, onAuthStateChanged } from "firebase/auth";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 
+const loginSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
 
 export default function Login() {
   const [user, setUser] = useState(null);
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
   const router = useRouter();
 
-  // auth :
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: zodResolver(loginSchema)
+  });
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -35,63 +40,39 @@ export default function Login() {
     }
   }, [user, router]);
 
-  const noramSignIn = async (e) => {
-    e.preventDefault();
-    console.log("Attempting to sign in with email:", e.target.email.value);
-    signInWithEmailAndPassword(auth, e.target.email.value, e.target.password.value)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log("Logged in user:", user);
+  const noramSignIn = async (data) => {
+    setError("");
+    signInWithEmailAndPassword(auth, data.email, data.password)
+      .then(() => {
         router.push("/dashboard");
       })
       .catch((error) => {
-        console.error("Login failed:", error.message);
+        setError(error.message);
       });
-  }
+  };
 
   const handleSignIn = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const userDocRef = doc(db, "users", result.user.uid);
       const userDocSnap = await getDoc(userDocRef);
-      // update the user document in Firestore if user doesn't exist
       if(!userDocSnap.exists()) {
         await setDoc(userDocRef, {
           uid: result.user.uid,
           name: result.user.displayName,
           email: result.user.email,
-          role: "user", // default role for google sign-in users
+          role: "user",
           createdAt: new Date(),
         });
       }
-
     } catch (error) {
-      console.error("Authentication error:", error);
+      console.error(error);
     }
   };
 
-  const handleSignOut = async () => {
-    try {
-      await signOut(auth);
-    } catch (error) {
-      console.error("Sign-out error:", error);
-    }
-  };
-
-  const handleSignUp = async (e) => {
-    e.preventDefault();
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      console.log("Success! Account created:", userCredential.user);
-    } catch (err) {
-      setError(err.message);
-    }
-  };
   return (
-
     <Box className="login-container">
       <Box className="login-card">
-
         <div className="login-header">
           <h2 className="login-title">Welcome Back</h2>
           <p className="login-subtitle">Please sign in to your account</p>
@@ -103,7 +84,7 @@ export default function Login() {
           </div>
         )}
 
-        <form className="login-form" onSubmit={noramSignIn}>
+        <form className="login-form" onSubmit={handleSubmit(noramSignIn)}>
           <div className="form-fields">
             <Box className="form-field">
               <label htmlFor="email" className="form-label">
@@ -112,10 +93,11 @@ export default function Login() {
               <input
                 id="email"
                 type="email"
-                required
                 className="form-input"
                 placeholder="you@example.com"
+                {...register("email")}
               />
+              {errors.email && <span className="field-error">{errors.email.message}</span>}
             </Box>
 
             <Box className="form-field">
@@ -125,10 +107,11 @@ export default function Login() {
               <input
                 id="password"
                 type="password"
-                required
                 className="form-input"
                 placeholder="••••••••"
+                {...register("password")}
               />
+              {errors.password && <span className="field-error">{errors.password.message}</span>}
             </Box>
           </div>
 
@@ -143,7 +126,7 @@ export default function Login() {
             <div className="divider">
               <span className="divider-text">or</span>
             </div>
-            {/* Google Sign-In */}
+
             <button
               className="btn-google"
               type="button"
@@ -160,7 +143,6 @@ export default function Login() {
           </Box>
         </form>
 
-        {/* Footer  */}
         <div className="login-footer">
           {"Don't have an account? "}
           <Link href="/signup" className="login-link">
@@ -168,13 +150,6 @@ export default function Login() {
           </Link>
         </div>
       </Box>
-
     </Box>
-
-  )
+  );
 }
-
-
-
-
-

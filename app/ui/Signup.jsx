@@ -7,45 +7,53 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import Link from "next/link";
 import Box from '@mui/material/Box';
 import { doc, setDoc } from "firebase/firestore";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import "./styles/signup.css";
+
+const signupSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  confirmPassword: z.string().min(6, "Confirm password must be at least 6 characters"),
+  role: z.enum(["user", "seller"], {
+    errorMap: () => ({ message: "Please select a role" })
+  }),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
+});
 
 export default function Signup() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleSignup = async (e) => {
-    e.preventDefault();
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: zodResolver(signupSchema)
+  });
+
+  const handleSignup = async (data) => {
     setError("");
-
-    if (e.target.password.value !== e.target.confirmPassword.value) {
-      return setError("Passwords do not match.");
-    }
-
-    if (e.target.password.value.length < 6) {
-      return setError("Password must be at least 6 characters long.");
-    }
-
     setLoading(true);
 
     try {
-     
-      const userCredential = await createUserWithEmailAndPassword(auth, e.target.email.value, e.target.password.value);
+      const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
       const user = userCredential.user;
-
       const userDocRef = doc(db, "users", user.uid);
 
       await setDoc(userDocRef, {
-      uid: user.uid,
-      name: e.target.name.value,
-      email: e.target.email.value,
-      role: e.target.role.value,
-      createdAt: new Date(),
-    });
+        uid: user.uid,
+        name: data.name,
+        email: data.email,
+        role: data.role,
+        createdAt: new Date(),
+      });
       
       router.push("/dashboard");  
     } catch (err) {
-      console.error("Error during sign-up:", err);
+      console.error(err);
       switch (err.code) {
         case "auth/email-already-in-use":
           setError("This email address is already registered.");
@@ -78,7 +86,7 @@ export default function Signup() {
           </Box>
         )}
 
-        <form className="signup-form" onSubmit={handleSignup}> 
+        <form className="signup-form" onSubmit={handleSubmit(handleSignup)}> 
           <Box className="form-fields">
             <Box className="form-field">
               <label htmlFor="name" className="form-label">
@@ -87,24 +95,26 @@ export default function Signup() {
               <input
                 id="name"
                 type="text"
-                required
                 disabled={loading}
                 className="form-input"
                 placeholder="full name"
+                {...register("name")}
               />
+              {errors.name && <span className="field-error">{errors.name.message}</span>}
             </Box>
             <Box className="form-field">
-              <label htmlFor="emailAddress" className="form-label">
+              <label htmlFor="email" className="form-label">
                 Email address
               </label>
               <input
                 id="email"
                 type="email"
-                required
                 disabled={loading}
                 className="form-input"
                 placeholder="you@example.com"
+                {...register("email")}
               />
+              {errors.email && <span className="field-error">{errors.email.message}</span>}
             </Box>
 
             <Box className="form-field">
@@ -114,11 +124,12 @@ export default function Signup() {
               <input
                 id="password"
                 type="password"
-                required
                 disabled={loading}
                 className="form-input"
                 placeholder="••••••••"
+                {...register("password")}
               />
+              {errors.password && <span className="field-error">{errors.password.message}</span>}
             </Box>
 
             <Box className="form-field">
@@ -128,11 +139,12 @@ export default function Signup() {
               <input
                 id="confirmPassword"
                 type="password"
-                required
                 disabled={loading}
                 className="form-input"
                 placeholder="••••••••"
+                {...register("confirmPassword")}
               />
+              {errors.confirmPassword && <span className="field-error">{errors.confirmPassword.message}</span>}
             </Box>
 
             <Box className="form-field">
@@ -141,15 +153,15 @@ export default function Signup() {
               </label>
               <select
                 id="role"
-                required
                 disabled={loading}
                 className="form-select"
+                {...register("role")}
               >
                 <option value="">Select a role</option>
                 <option value="user">User</option>
                 <option value="seller">Seller</option>
-                <option value="admin">Admin</option>
               </select>
+              {errors.role && <span className="field-error">{errors.role.message}</span>}
             </Box>
           </Box>
 

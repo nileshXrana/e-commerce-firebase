@@ -1,6 +1,7 @@
-// "use client";
+"use client";
+
 import React from 'react'
-import './styles/loginform.css'
+import './styles/login.css'
 import Box from '@mui/material/Box';
 import { auth, googleProvider } from "../lib/firebase";
 import { signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
@@ -11,7 +12,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 
-const Login = () => {
+export default function Login() {
   const [user, setUser] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,7 +20,7 @@ const Login = () => {
 
   const router = useRouter();
 
-  // auth : 
+  // auth :
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -164,8 +165,6 @@ const Login = () => {
 
   )
 }
-
-export default Login
 
 
 

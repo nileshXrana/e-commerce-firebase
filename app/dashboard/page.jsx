@@ -49,12 +49,9 @@ export default function UserRoleComponent() {
 
   return (
     <Box className="dashboard-container">
-      {role === "user" && <UserDashboard />}
+      {(role === "user" || role === "Guest / Logged Out" || !role) && <UserDashboard />}
       {role === "seller" && <SellerDashboard sellerId={uid} />}
       {role === "admin" && <AdminDashboard />}
-      {(role === "Guest / Logged Out" || !role) && (
-        <p className="dashboard-message">Please log in to view the dashboard.</p>
-      )}
     </Box>
   );
 }

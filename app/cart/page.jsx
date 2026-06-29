@@ -6,11 +6,16 @@ import Button from "@mui/material/Button";
 import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import { useRouter } from "next/navigation";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../lib/firebase";
 import "../page.css";
 import "./cart.css";
 import Box from '@mui/material/Box';
 
 export default function Cart() {
+  const router = useRouter();
+  const [checkingAuth, setCheckingAuth] = useState(true);
   const [cart, setCart] = useState(() => {
     if (typeof window !== "undefined") {
       const savedCart = localStorage.getItem("cart");
@@ -21,6 +26,17 @@ export default function Cart() {
     return [];
   });
   const [open, setOpen] = React.useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        router.push("/login");
+      } else {
+        setCheckingAuth(false);
+      }
+    });
+    return () => unsubscribe();
+  }, [router]);
 
   const handleClick = () => {
     setOpen(true);
@@ -80,6 +96,16 @@ export default function Cart() {
     updateCart([]);
     handleClick();
   };
+
+  if (checkingAuth) {
+    return (
+      <main className="main">
+        <Box className="cart-container" style={{ textAlign: "center", padding: "4rem 0" }}>
+          <p>Checking authorization...</p>
+        </Box>
+      </main>
+    );
+  }
 
   return (
     <Box>

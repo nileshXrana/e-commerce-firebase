@@ -12,13 +12,14 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import Badge from '@mui/material/Badge';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Link from 'next/link';
-import { signOut } from "firebase/auth";
+import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../lib/firebase";
 import { useRouter } from 'next/navigation';
 
 export default function PrimarySearchAppBar() {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const isMenuOpen = Boolean(anchorEl);
+    const [user, setUser] = React.useState(null);
     const [cartCount, setCartCount] = React.useState(() => {
         if (typeof window !== "undefined") {
             const savedCart = localStorage.getItem("cart");
@@ -46,6 +47,13 @@ export default function PrimarySearchAppBar() {
 
         window.addEventListener("cartUpdated", updateCount);
         return () => window.removeEventListener("cartUpdated", updateCount);
+    }, []);
+
+    React.useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            setUser(currentUser);
+        });
+        return () => unsubscribe();
     }, []);
 
     const handleProfileMenuOpen = (event) => {
@@ -139,17 +147,19 @@ export default function PrimarySearchAppBar() {
                                 <ShoppingCartIcon />
                             </Badge>
                         </IconButton>
-                        <IconButton
-                            size="large"
-                            edge="end"
-                            aria-label="account of current user"
-                            aria-controls={menuId}
-                            aria-haspopup="true"
-                            onClick={handleProfileMenuOpen}
-                            color="inherit"
-                        >
-                            <AccountCircle />
-                        </IconButton>
+                        {user && (
+                            <IconButton
+                                size="large"
+                                edge="end"
+                                aria-label="account of current user"
+                                aria-controls={menuId}
+                                aria-haspopup="true"
+                                onClick={handleProfileMenuOpen}
+                                color="inherit"
+                            >
+                                <AccountCircle />
+                            </IconButton>
+                        )}
                     </Box>
                 </Toolbar>
             </AppBar>

@@ -4,10 +4,12 @@ import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../lib/firebase";
+import { useRouter } from "next/navigation";
 import Box from "@mui/material/Box";
 import "../ui/styles/profile.css";
 
 export default function ProfilePage() {
+  const router = useRouter();
   const [user, setUser] = useState(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -36,13 +38,13 @@ export default function ProfilePage() {
           setMessage({ text: "Failed to load profile details.", type: "error" });
         }
       } else {
-        setMessage({ text: "Please log in to view your profile.", type: "error" });
+        router.push("/login");
       }
       setLoading(false);
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [router]);
 
   const handleSave = async (e) => {
     e.preventDefault();

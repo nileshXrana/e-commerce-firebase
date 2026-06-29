@@ -4,12 +4,14 @@ import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import { db } from "../lib/firebase";
+import { db, auth } from "../lib/firebase";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
+import { useRouter } from 'next/navigation';
 import "./styles/user.css";
 import "../page.css";
 
 const UserDashboard = () => {
+  const router = useRouter();
   const [products, setProducts] = useState([]);
   const [sellers, setSellers] = useState({});
   const [loading, setLoading] = useState(true);
@@ -65,6 +67,10 @@ const UserDashboard = () => {
   };
 
   const addToCart = (product) => {
+    if (!auth.currentUser) {
+      router.push("/login");
+      return;
+    }
     const existing = cart.find(item => item.id === product.id);
     let newCart;
     if (existing) {
@@ -78,6 +84,10 @@ const UserDashboard = () => {
   };
 
   const decreaseQty = (productId) => {
+    if (!auth.currentUser) {
+      router.push("/login");
+      return;
+    }
     const existing = cart.find(item => item.id === productId);
     if (!existing) return;
 

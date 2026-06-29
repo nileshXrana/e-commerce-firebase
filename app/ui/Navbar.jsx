@@ -9,6 +9,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import Badge from '@mui/material/Badge';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Link from 'next/link';
 import { signOut } from "firebase/auth";
 import { auth } from "../lib/firebase";
@@ -17,8 +19,34 @@ import { useRouter } from 'next/navigation';
 export default function PrimarySearchAppBar() {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const isMenuOpen = Boolean(anchorEl);
+    const [cartCount, setCartCount] = React.useState(() => {
+        if (typeof window !== "undefined") {
+            const savedCart = localStorage.getItem("cart");
+            if (savedCart) {
+                const parsed = JSON.parse(savedCart);
+                return parsed.reduce((sum, item) => sum + item.quantity, 0);
+            }
+        }
+        return 0;
+    });
     
     const router = useRouter();
+
+    React.useEffect(() => {
+        const updateCount = () => {
+            const savedCart = localStorage.getItem("cart");
+            if (savedCart) {
+                const parsed = JSON.parse(savedCart);
+                const count = parsed.reduce((sum, item) => sum + item.quantity, 0);
+                setCartCount(count);
+            } else {
+                setCartCount(0);
+            }
+        };
+
+        window.addEventListener("cartUpdated", updateCount);
+        return () => window.removeEventListener("cartUpdated", updateCount);
+    }, []);
 
     const handleProfileMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
@@ -95,10 +123,22 @@ export default function PrimarySearchAppBar() {
                         noWrap
                         component="div"
                     >
-                        E-Commerce
+                        <Link href="/dashboard" style={{ color: 'inherit', textDecoration: 'none' }}>
+                            E-Commerce
+                        </Link>
                     </Typography>
                     <Box sx={{ flexGrow: 1 }} />
-                    <Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <IconButton
+                            size="large"
+                            color="inherit"
+                            onClick={() => router.push("/cart")}
+                            aria-label="show cart items"
+                        >
+                            <Badge badgeContent={cartCount} color="error">
+                                <ShoppingCartIcon />
+                            </Badge>
+                        </IconButton>
                         <IconButton
                             size="large"
                             edge="end"

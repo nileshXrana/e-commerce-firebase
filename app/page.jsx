@@ -1,4 +1,3 @@
-import "./ui/styles/page.css";
 import Box from '@mui/material/Box';
 import Landing from './ui/Landing';
 

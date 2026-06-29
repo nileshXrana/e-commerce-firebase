@@ -178,8 +178,8 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    background-color: #f0f9ff;
-    border: 1px solid rgba(14, 165, 233, 0.2);
+    background-color: #f3f4f6;
+    border: 1px solid #d1d5db;
     border-radius: 4px;
     height: 38px;
     box-sizing: border-box;
@@ -189,7 +189,7 @@
 .qty-btn {
     border: none;
     background: transparent;
-    color: #0284c7; 
+    color: #374151; 
     font-size: 1.25rem;
     font-weight: 600;
     width: 40px;
@@ -203,19 +203,19 @@
 }
 
 .qty-btn:hover:not(:disabled) {
-    background-color: #e0f2fe;
+    background-color: #e5e7eb;
 }
 
 .qty-btn:disabled {
-    color: #bae6fd;
+    color: #9ca3af;
     cursor: not-allowed;
-    background-color: #f0f9ff;
+    background-color: #f3f4f6;
 }
 
 .qty-text {
     font-size: 0.95rem;
     font-weight: 600;
-    color: #0369a1;
+    color: #111827;
     user-select: none;
 }
 
@@ -263,4 +263,15 @@
 .page-btn:disabled {
     border-color: #e5e7eb !important;
     color: #9ca3af !important;
+}
+
+.addtocart {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  text-transform: none !important;
+  font-weight: 600 !important;
+}
+
+.addtocart:hover {
+  background-color: #1f2937 !important;
 }

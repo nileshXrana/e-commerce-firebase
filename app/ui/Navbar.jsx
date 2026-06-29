@@ -17,6 +17,9 @@ import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import Link from 'next/link';
+import { signOut } from "firebase/auth";
+import { auth } from "../lib/firebase";
+import { useRouter } from 'next/navigation';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -65,7 +68,8 @@ export default function PrimarySearchAppBar() {
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
+    
+    const router = useRouter();
     const handleProfileMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -81,6 +85,17 @@ export default function PrimarySearchAppBar() {
 
     const handleMobileMenuOpen = (event) => {
         setMobileMoreAnchorEl(event.currentTarget);
+    };
+
+    const handleLogout = () => {
+        signOut(auth)
+            .then(() => {
+                console.log("User logged out");
+                router.push("/");
+            })
+            .catch((error) => {
+                console.error("Logout failed", error);
+            });
     };
 
     const menuId = 'primary-search-account-menu';
@@ -105,7 +120,12 @@ export default function PrimarySearchAppBar() {
                     Profile
                 </Link>
             </MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            <MenuItem onClick={() => {
+                handleMenuClose();
+                handleLogout();
+            }}>
+                Logout
+            </MenuItem>
         </Menu>
     );
 

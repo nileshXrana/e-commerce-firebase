@@ -19,6 +19,7 @@
 }
 
 .landing-tagline {
+  font-family: 'Inter', sans-serif;
   font-size: 1.15rem;
   color: #4b5563;
   max-width: 600px;

@@ -167,3 +167,32 @@
   padding: 2rem;
   font-style: italic;
 }
+
+.tabs-container {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.5rem;
+}
+
+.tab-button {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #4b5563;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.tab-button:hover {
+  color: #111827;
+}
+
+.tab-button.active {
+  color: #1976d2;
+  border-bottom-color: #1976d2;
+}

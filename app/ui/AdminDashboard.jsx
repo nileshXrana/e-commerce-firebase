@@ -107,7 +107,7 @@ const AdminDashboard = () => {
                     <div className="action-buttons">
                       <button
                         onClick={() => handleToggleDisable(account.id, !!account.disabled)}
-                        className={`btn-action ${account.disabled ? "btn-enable" : "btn-disable"}`}
+                        className="btn-action btn-disable"
                         type="button"
                       >
                         {account.disabled ? "Enable" : "Disable"}

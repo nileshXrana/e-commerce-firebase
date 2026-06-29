@@ -147,13 +147,13 @@
 }
 
 .status-badge.active {
-  background-color: #d1fae5;
-  color: #065f46;
+  background-color: #1976d2;
+  color: #ffffff;
 }
 
 .status-badge.disabled {
-  background-color: #fee2e2;
-  color: #991b1b;
+  background-color: #1976d2;
+  color: #ffffff;
 }
 
 .action-buttons {
@@ -180,13 +180,4 @@
 
 .btn-disable:hover {
   background-color: #e5e7eb;
-}
-
-.btn-enable {
-  background-color: #d1fae5;
-  color: #065f46;
-}
-
-.btn-enable:hover {
-  background-color: #a7f3d0;
 }

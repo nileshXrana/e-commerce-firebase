@@ -19,6 +19,7 @@ const SellerDashboard = ({ sellerId }) => {
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [show, setShow] = useState(true);
+  const [activeTab, setActiveTab] = useState("productList");
 
   useEffect(() => {
     if (!sellerId) return;
@@ -58,6 +59,7 @@ const SellerDashboard = ({ sellerId }) => {
       setPrice("");
       setDescription("");
       setShow(true);
+      setActiveTab("productList");
     } catch (error) {
       console.error("Error adding product:", error);
     }
@@ -88,111 +90,129 @@ const SellerDashboard = ({ sellerId }) => {
     <Box className="seller-dashboard">
       <h2 className="seller-title">Seller Dashboard</h2>
 
-      {/* Form to add product */}
-      <form onSubmit={handleAddProduct} className="add-product-form">
-        <h3 style={{ margin: "0 0 1rem 0" }}>Add New Product</h3>
-        <Box className="form-row">
-          <Box className="form-group-item">
-            <label htmlFor="prod-name">Product Name</label>
-            <input
-              id="prod-name"
-              type="text"
-              className="seller-input"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. T-Shirt"
-              required
-            />
-          </Box>
-          <Box className="form-group-item">
-            <label htmlFor="prod-price">Price ($)</label>
-            <input
-              id="prod-price"
-              type="number"
-              step="0.01"
-              className="seller-input"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              placeholder="e.g. 19.99"
-              required
-            />
-          </Box>
-        </Box>
-
-        <Box className="form-row">
-          <Box className="form-group-item" style={{ flex: 2 }}>
-            <label htmlFor="prod-desc">Description</label>
-            <textarea
-              id="prod-desc"
-              className="seller-textarea"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Product details..."
-              rows={3}
-            />
-          </Box>
-          <Box className="form-group-item">
-            <label className="checkbox-container">
-              <input
-                type="checkbox"
-                checked={show}
-                onChange={(e) => setShow(e.target.checked)}
-              />
-              Show to buyers
-            </label>
-          </Box>
-        </Box>
-
-        <button type="submit" className="btn-add-product">
+      <div className="tabs-container">
+        <button
+          className={`tab-button ${activeTab === "productList" ? "active" : ""}`}
+          onClick={() => setActiveTab("productList")}
+          type="button"
+        >
+          Product List
+        </button>
+        <button
+          className={`tab-button ${activeTab === "addProduct" ? "active" : ""}`}
+          onClick={() => setActiveTab("addProduct")}
+          type="button"
+        >
           Add Product
         </button>
-      </form>
+      </div>
 
-      {/* Products list */}
-      <h3 className="seller-subtitle">Your Products List</h3>
-      <Box className="products-table-wrapper">
-        {products.length === 0 ? (
-          <p className="no-products-msg">No products added yet.</p>
-        ) : (
-          <table className="product-table">
-            <thead>
-              <tr>
-                <th>Product Name</th>
-                <th>Price</th>
-                <th>Description</th>
-                <th style={{ textAlign: "center" }}>Show to Buyers</th>
-                <th style={{ textAlign: "center" }}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((product) => (
-                <tr key={product.id}>
-                  <td>{product.name}</td>
-                  <td className="price-col">${product.price.toFixed(2)}</td>
-                  <td>{product.description || "-"}</td>
-                  <td style={{ textAlign: "center" }}>
-                    <input
-                      type="checkbox"
-                      className="table-checkbox"
-                      checked={product.show ?? true}
-                      onChange={() => handleToggleShow(product.id, product.show ?? true)}
-                    />
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    <button
-                      onClick={() => handleDeleteProduct(product.id)}
-                      className="btn-delete-product"
-                      type="button"
-                    >
-                      Delete
-                    </button>
-                  </td>
+      {activeTab === "addProduct" && (
+        <form onSubmit={handleAddProduct} className="add-product-form">
+          <h3 style={{ margin: "0 0 1rem 0" }}>Add New Product</h3>
+          <Box className="form-row">
+            <Box className="form-group-item">
+              <label htmlFor="prod-name">Product Name</label>
+              <input
+                id="prod-name"
+                type="text"
+                className="seller-input"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="e.g. T-Shirt"
+                required
+              />
+            </Box>
+            <Box className="form-group-item">
+              <label htmlFor="prod-price">Price ($)</label>
+              <input
+                id="prod-price"
+                type="number"
+                step="0.01"
+                className="seller-input"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                placeholder="e.g. 19.99"
+                required
+              />
+            </Box>
+          </Box>
+
+          <Box className="form-row">
+            <Box className="form-group-item" style={{ flex: 2 }}>
+              <label htmlFor="prod-desc">Description</label>
+              <textarea
+                id="prod-desc"
+                className="seller-textarea"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Product details..."
+                rows={3}
+              />
+            </Box>
+            <Box className="form-group-item">
+              <label className="checkbox-container">
+                <input
+                  type="checkbox"
+                  checked={show}
+                  onChange={(e) => setShow(e.target.checked)}
+                />
+                Show to buyers
+              </label>
+            </Box>
+          </Box>
+
+          <button type="submit" className="btn-add-product">
+            Add Product
+          </button>
+        </form>
+      )}
+
+      {activeTab === "productList" && (
+        <Box className="products-table-wrapper">
+          {products.length === 0 ? (
+            <p className="no-products-msg">No products added yet.</p>
+          ) : (
+            <table className="product-table">
+              <thead>
+                <tr>
+                  <th>Product Name</th>
+                  <th>Price</th>
+                  <th>Description</th>
+                  <th style={{ textAlign: "center" }}>Show to Buyers</th>
+                  <th style={{ textAlign: "center" }}>Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </Box>
+              </thead>
+              <tbody>
+                {products.map((product) => (
+                  <tr key={product.id}>
+                    <td>{product.name}</td>
+                    <td className="price-col">${product.price.toFixed(2)}</td>
+                    <td>{product.description || "-"}</td>
+                    <td style={{ textAlign: "center" }}>
+                      <input
+                        type="checkbox"
+                        className="table-checkbox"
+                        checked={product.show ?? true}
+                        onChange={() => handleToggleShow(product.id, product.show ?? true)}
+                      />
+                    </td>
+                    <td style={{ textAlign: "center" }}>
+                      <button
+                        onClick={() => handleDeleteProduct(product.id)}
+                        className="btn-delete-product"
+                        type="button"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </Box>
+      )}
     </Box>
   );
 }

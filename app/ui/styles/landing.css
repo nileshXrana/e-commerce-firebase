@@ -1,0 +1,26 @@
+.landing-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 70vh;
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 2.25rem;
+  font-weight: bold;
+}
+
+.started-link {
+  margin-top: 1rem;
+  background-color: #1f2937;
+  border-radius: 4px;
+  padding: 8px 16px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.started-button {
+  color: #86efac !important;
+  text-transform: none;
+  font-weight: bold;
+}

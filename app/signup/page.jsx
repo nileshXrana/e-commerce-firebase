@@ -7,6 +7,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import Link from "next/link";
 import Box from '@mui/material/Box';
 import { doc, setDoc } from "firebase/firestore";
+import "../ui/styles/signup.css";
 
 
 
@@ -68,23 +69,23 @@ export default function SignupPage() {
   };
 
   return (
-    <Box className="flex min-h-screen items-center justify-center px-4">
-      <Box className="w-full max-w-md space-y-8 border-gray-200 border rounded-xl bg-violet-50 p-8 shadow-md">
-        <Box className="text-center">
-          <h2 className="text-3xl font-extrabold text-gray-900">Create an account</h2>
-          <p className="mt-2 text-sm text-gray-600">Sign Up Now !</p>
+    <Box className="signup-container">
+      <Box className="signup-card">
+        <Box className="signup-header">
+          <h2 className="signup-title">Create an account</h2>
+          <p className="signup-subtitle">Sign Up Now !</p>
         </Box>
 
         {error && (
-          <Box className="rounded-md bg-red-50 p-4 text-sm text-red-700 font-medium border border-red-200">
+          <Box className="error-box">
             {error}
           </Box>
         )}
 
-        <form className="mt-8 space-y-6" onSubmit={handleSignup}> 
-          <Box className="space-y-4">
-            <Box>
-              <label htmlFor="email-address" className="text-sm font-medium text-gray-700 block mb-1">
+        <form className="signup-form" onSubmit={handleSignup}> 
+          <Box className="form-fields">
+            <Box className="form-field">
+              <label htmlFor="email-address" className="form-label">
                 Email address
               </label>
               <input
@@ -92,15 +93,15 @@ export default function SignupPage() {
                 type="email"
                 required
                 disabled={loading}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 disabled:bg-gray-100"
+                className="form-input"
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </Box>
 
-            <Box>
-              <label htmlFor="password" className="text-sm font-medium text-gray-700 block mb-1">
+            <Box className="form-field">
+              <label htmlFor="password" className="form-label">
                 Password
               </label>
               <input
@@ -108,15 +109,15 @@ export default function SignupPage() {
                 type="password"
                 required
                 disabled={loading}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 disabled:bg-gray-100"
+                className="form-input"
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </Box>
 
-            <Box>
-              <label htmlFor="confirm-password" className="text-sm font-medium text-gray-700 block mb-1">
+            <Box className="form-field">
+              <label htmlFor="confirm-password" className="form-label">
                 Confirm Password
               </label>
               <input
@@ -124,47 +125,45 @@ export default function SignupPage() {
                 type="password"
                 required
                 disabled={loading}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 disabled:bg-gray-100"
+                className="form-input"
                 placeholder="••••••••"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
             </Box>
 
-            <Box>
-              <label htmlFor="role" className="text-sm font-medium text-gray-700 block mb-1">
+            <Box className="form-field">
+              <label htmlFor="role" className="form-label">
                 Role
               </label>
               <select
                 id="role"
                 required
                 disabled={loading}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-600 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 disabled:bg-gray-100"
+                className="form-select"
               >
                 <option value="">Select a role</option>
                 <option value="user">User</option>
                 <option value="seller">Seller</option>
                 <option value="admin">Admin</option>
               </select>
-
-             
             </Box>
           </Box>
 
-          <Box>
+          <Box className="btn-container">
             <button
               type="submit"
               disabled={loading}
-              className="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-400"
+              className="btn-submit"
             >
               {loading ? "Creating account..." : "Sign Up"}
             </button>
           </Box>
         </form>
 
-        <Box className="text-center text-sm text-gray-600 mt-4">
+        <Box className="signup-footer">
           Already have an account?{" "}
-          <Link href="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+          <Link href="/login" className="signup-link">
             Log in here
           </Link>
         </Box>

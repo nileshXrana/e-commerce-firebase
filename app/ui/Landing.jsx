@@ -2,15 +2,16 @@ import React from 'react'
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Link from 'next/link';
+import './styles/landing.css';
 
 export default function Landing() {
     return (
-        <Box className="text-4xl font-bold text-center mt-8 flex flex-col items-center justify-center h-[70vh]">
+        <Box className="landing-container">
             <Box>
                 THIS IS A LANDING PAGE
             </Box>
-            <Link href="/login" className="mt-4 bg-gray-800 rounded-sm p-2 ">
-                <Button className='text-green-300'>Get Started</Button>
+            <Link href="/login" className="started-link">
+                <Button className='started-button'>Get Started</Button>
             </Link>
         </Box>
     )

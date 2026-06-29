@@ -5,6 +5,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { db } from "../lib/firebase";
 import Box from '@mui/material/Box';
 import { doc, getDoc } from "firebase/firestore";
+import "../ui/styles/dashboard.css";
 
 export default function UserRoleComponent() {
   const [role, setRole] = useState(null);
@@ -41,8 +42,8 @@ export default function UserRoleComponent() {
   if (loading) return <p>Checking authorization...</p>;
 
   return (
-    <Box className="flex flex-col items-center justify-center min-h-[90vh] bg-gray-100">
-      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+    <Box className="dashboard-container">
+      <h1 className="dashboard-title">Dashboard</h1>
       {role == "user" && <p>Welcome to the User Dashboard!</p>}
       {role == "seller" && <p>Welcome to the Seller Dashboard!</p>}
       {role == "admin" && <p>Welcome to the Admin Dashboard!</p>}

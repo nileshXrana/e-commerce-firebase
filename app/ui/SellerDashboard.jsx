@@ -1,12 +1,200 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
+import { db } from "../lib/firebase";
+import { 
+  collection, 
+  addDoc, 
+  deleteDoc, 
+  updateDoc, 
+  doc, 
+  query, 
+  where, 
+  onSnapshot 
+} from "firebase/firestore";
+import "./styles/seller.css";
 
-const SellerDashboard = () => {
+const SellerDashboard = ({ sellerId }) => {
+  const [products, setProducts] = useState([]);
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const [description, setDescription] = useState("");
+  const [show, setShow] = useState(true);
+
+  useEffect(() => {
+    if (!sellerId) return;
+
+    const q = query(
+      collection(db, "products"),
+      where("sellerId", "==", sellerId)
+    );
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const productsList = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setProducts(productsList);
+    });
+
+    return () => unsubscribe();
+  }, [sellerId]);
+
+  const handleAddProduct = async (e) => {
+    e.preventDefault();
+    if (!name || !price || !sellerId) return;
+
+    try {
+      await addDoc(collection(db, "products"), {
+        name,
+        price: parseFloat(price),
+        description,
+        show,
+        sellerId,
+        createdAt: new Date(),
+      });
+
+      // Reset form
+      setName("");
+      setPrice("");
+      setDescription("");
+      setShow(true);
+    } catch (error) {
+      console.error("Error adding product:", error);
+    }
+  };
+
+  const handleDeleteProduct = async (productId) => {
+    if (window.confirm("Are you sure you want to delete this product?")) {
+      try {
+        await deleteDoc(doc(db, "products", productId));
+      } catch (error) {
+        console.error("Error deleting product:", error);
+      }
+    }
+  };
+
+  const handleToggleShow = async (productId, currentShowValue) => {
+    try {
+      const productRef = doc(db, "products", productId);
+      await updateDoc(productRef, {
+        show: !currentShowValue,
+      });
+    } catch (error) {
+      console.error("Error updating product visibility:", error);
+    }
+  };
+
   return (
-    <Box>
-      <h1>SellerDashboard</h1>
+    <Box className="seller-dashboard">
+      <h2 className="seller-title">Seller Dashboard</h2>
+
+      {/* Form to add product */}
+      <form onSubmit={handleAddProduct} className="add-product-form">
+        <h3 style={{ margin: "0 0 1rem 0" }}>Add New Product</h3>
+        <div className="form-row">
+          <div className="form-group-item">
+            <label htmlFor="prod-name">Product Name</label>
+            <input
+              id="prod-name"
+              type="text"
+              className="seller-input"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="e.g. T-Shirt"
+              required
+            />
+          </div>
+          <div className="form-group-item">
+            <label htmlFor="prod-price">Price ($)</label>
+            <input
+              id="prod-price"
+              type="number"
+              step="0.01"
+              className="seller-input"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              placeholder="e.g. 19.99"
+              required
+            />
+          </div>
+        </div>
+
+        <div className="form-row">
+          <div className="form-group-item" style={{ flex: 2 }}>
+            <label htmlFor="prod-desc">Description</label>
+            <textarea
+              id="prod-desc"
+              className="seller-textarea"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Product details..."
+              rows={3}
+            />
+          </div>
+          <div className="form-group-item">
+            <label className="checkbox-container">
+              <input
+                type="checkbox"
+                checked={show}
+                onChange={(e) => setShow(e.target.checked)}
+              />
+              Show to buyers
+            </label>
+          </div>
+        </div>
+
+        <button type="submit" className="btn-add-product">
+          Add Product
+        </button>
+      </form>
+
+      {/* Products list */}
+      <h3 className="seller-subtitle">Your Products List</h3>
+      <div className="products-table-wrapper">
+        {products.length === 0 ? (
+          <p className="no-products-msg">No products added yet.</p>
+        ) : (
+          <table className="product-table">
+            <thead>
+              <tr>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Description</th>
+                <th style={{ textAlign: "center" }}>Show to Buyers</th>
+                <th style={{ textAlign: "center" }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {products.map((product) => (
+                <tr key={product.id}>
+                  <td>{product.name}</td>
+                  <td className="price-col">${product.price.toFixed(2)}</td>
+                  <td>{product.description || "-"}</td>
+                  <td style={{ textAlign: "center" }}>
+                    <input
+                      type="checkbox"
+                      className="table-checkbox"
+                      checked={product.show ?? true}
+                      onChange={() => handleToggleShow(product.id, product.show ?? true)}
+                    />
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    <button
+                      onClick={() => handleDeleteProduct(product.id)}
+                      className="btn-delete-product"
+                      type="button"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
     </Box>
-  )
+  );
 }
 
-export default SellerDashboard
+export default SellerDashboard;

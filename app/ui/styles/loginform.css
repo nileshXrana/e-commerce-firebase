@@ -1,20 +1,21 @@
 .login-container {
   display: flex;
-  min-height: 100vh;
+  min-height: 85vh;
   align-items: center;
   justify-content: center;
-  padding: 0 1rem;
+  padding: 2rem 1rem;
   box-sizing: border-box;
+  background-color: #f9fafb;
 }
 
 .login-card {
   width: 100%;
-  max-width: 448px;
+  max-width: 420px;
   border: 1px solid #e5e7eb;
-  border-radius: 0.75rem;
-  background-color: #f5f3ff;
-  padding: 2rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
+  background-color: #ffffff;
+  padding: 2.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
   box-sizing: border-box;
 }
 
@@ -24,37 +25,37 @@
 }
 
 .login-title {
-  font-size: 1.875rem;
-  font-weight: 800;
+  font-size: 1.625rem;
+  font-weight: 700;
   color: #111827;
   margin: 0 0 0.5rem 0;
 }
 
 .login-subtitle {
   font-size: 0.875rem;
-  color: #4b5563;
+  color: #6b7280;
   margin: 0;
 }
 
 .error-box {
-  border-radius: 0.375rem;
+  border-radius: 6px;
   background-color: #fef2f2;
-  padding: 1rem;
-  font-size: 0.875rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
   color: #b91c1c;
   font-weight: 500;
-  border: 1px solid #fee2e2;
+  border: 1px solid #fecaca;
   margin-bottom: 1.5rem;
 }
 
 .login-form {
-  margin-top: 2rem;
+  margin-top: 1.5rem;
 }
 
 .form-fields {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .form-field {
@@ -66,30 +67,28 @@
   font-size: 0.875rem;
   font-weight: 500;
   color: #374151;
-  display: block;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.375rem;
 }
 
 .form-input {
   width: 100%;
-  border-radius: 0.375rem;
+  border-radius: 6px;
   border: 1px solid #d1d5db;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.875rem;
+  padding: 0.625rem 0.75rem;
+  font-size: 0.9rem;
   color: #111827;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   outline: none;
   box-sizing: border-box;
   background-color: #ffffff;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .form-input:focus {
-  border-color: #6366f1;
-  box-shadow: 0 0 0 1px #6366f1;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 1px #4f46e5;
 }
 
-.form-input:disabled {
-  background-color: #f3f4f6;
+.form-input::placeholder {
   color: #9ca3af;
 }
 
@@ -97,7 +96,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  margin-top: 1.5rem;
+  margin-top: 1.75rem;
 }
 
 .btn-submit {
@@ -105,32 +104,27 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  border-radius: 0.375rem;
+  border-radius: 6px;
   border: 1px solid transparent;
   background-color: #4f46e5;
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-  font-weight: 500;
+  padding: 0.625rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
   color: #ffffff;
   cursor: pointer;
   box-sizing: border-box;
-  transition: background-color 0.15s ease;
+  transition: background-color 0.15s;
 }
 
 .btn-submit:hover {
   background-color: #4338ca;
 }
 
-.btn-submit:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #4f46e5;
-}
-
 .divider {
   display: flex;
   align-items: center;
   text-align: center;
-  margin: 0.5rem 0;
+  margin: 0.75rem 0;
 }
 
 .divider::before,
@@ -141,7 +135,7 @@
 }
 
 .divider-text {
-  padding: 0 1rem;
+  padding: 0 0.75rem;
   font-size: 0.75rem;
   color: #9ca3af;
   text-transform: uppercase;
@@ -155,48 +149,40 @@
   justify-content: center;
   gap: 0.5rem;
   width: 100%;
-  border-radius: 0.375rem;
+  border-radius: 6px;
   border: 1px solid #d1d5db;
   background-color: #ffffff;
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-  font-weight: 500;
+  padding: 0.625rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
   color: #374151;
   cursor: pointer;
   box-sizing: border-box;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  transition: background-color 0.15s ease;
+  transition: background-color 0.15s;
 }
 
 .btn-google:hover {
   background-color: #f9fafb;
 }
 
-.btn-google:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #4f46e5;
-}
-
 .google-icon {
-  height: 1.25rem;
-  width: 1.25rem;
+  height: 1.15rem;
+  width: 1.15rem;
 }
 
 .login-footer {
   text-align: center;
   font-size: 0.875rem;
   color: #4b5563;
-  margin-top: 1.5rem;
+  margin-top: 1.75rem;
 }
 
 .login-link {
-  font-weight: 500;
+  font-weight: 600;
   color: #4f46e5;
   text-decoration: none;
-  transition: color 0.15s ease;
 }
 
 .login-link:hover {
-  color: #4338ca;
   text-decoration: underline;
 }

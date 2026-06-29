@@ -6,9 +6,13 @@ import { db } from "../lib/firebase";
 import Box from '@mui/material/Box';
 import { doc, getDoc } from "firebase/firestore";
 import "../ui/styles/dashboard.css";
+import UserDashboard from "../ui/UserDashboard";
+import SellerDashboard from "../ui/SellerDashboard";
+import AdminDashboard from "../ui/AdminDashboard";
 
 export default function UserRoleComponent() {
   const [role, setRole] = useState(null);
+  const [uid, setUid] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -16,6 +20,7 @@ export default function UserRoleComponent() {
 
     const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
       if (user) {
+        setUid(user.uid);
         try {
           const userDocRef = doc(db, "users", user.uid);
           const userDocSnap = await getDoc(userDocRef);
@@ -32,6 +37,7 @@ export default function UserRoleComponent() {
         }
       } else {
         setRole("Guest / Logged Out");
+        setUid(null);
       }
       setLoading(false);
     });
@@ -44,9 +50,10 @@ export default function UserRoleComponent() {
   return (
     <Box className="dashboard-container">
       <h1 className="dashboard-title">Dashboard</h1>
-      {role == "user" && <p>Welcome to the User Dashboard!</p>}
-      {role == "seller" && <p>Welcome to the Seller Dashboard!</p>}
-      {role == "admin" && <p>Welcome to the Admin Dashboard!</p>}
+      {role === "user" && <UserDashboard />}
+      {role === "seller" && <SellerDashboard sellerId={uid} />}
+      {role === "admin" && <AdminDashboard />}
+      {(role === "Guest / Logged Out" || !role) && <p>Please log in to view the dashboard.</p>}
     </Box>
   );
 }

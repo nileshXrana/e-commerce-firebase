@@ -49,7 +49,6 @@ export default function UserRoleComponent() {
 
   return (
     <Box className="dashboard-container">
-      <h1 className="dashboard-title">Dashboard</h1>
       {role === "user" && <UserDashboard />}
       {role === "seller" && <SellerDashboard sellerId={uid} />}
       {role === "admin" && <AdminDashboard />}

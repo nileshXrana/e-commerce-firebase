@@ -91,8 +91,8 @@ const SellerDashboard = ({ sellerId }) => {
       {/* Form to add product */}
       <form onSubmit={handleAddProduct} className="add-product-form">
         <h3 style={{ margin: "0 0 1rem 0" }}>Add New Product</h3>
-        <div className="form-row">
-          <div className="form-group-item">
+        <Box className="form-row">
+          <Box className="form-group-item">
             <label htmlFor="prod-name">Product Name</label>
             <input
               id="prod-name"
@@ -103,8 +103,8 @@ const SellerDashboard = ({ sellerId }) => {
               placeholder="e.g. T-Shirt"
               required
             />
-          </div>
-          <div className="form-group-item">
+          </Box>
+          <Box className="form-group-item">
             <label htmlFor="prod-price">Price ($)</label>
             <input
               id="prod-price"
@@ -116,11 +116,11 @@ const SellerDashboard = ({ sellerId }) => {
               placeholder="e.g. 19.99"
               required
             />
-          </div>
-        </div>
+          </Box>
+        </Box>
 
-        <div className="form-row">
-          <div className="form-group-item" style={{ flex: 2 }}>
+        <Box className="form-row">
+          <Box className="form-group-item" style={{ flex: 2 }}>
             <label htmlFor="prod-desc">Description</label>
             <textarea
               id="prod-desc"
@@ -130,8 +130,8 @@ const SellerDashboard = ({ sellerId }) => {
               placeholder="Product details..."
               rows={3}
             />
-          </div>
-          <div className="form-group-item">
+          </Box>
+          <Box className="form-group-item">
             <label className="checkbox-container">
               <input
                 type="checkbox"
@@ -140,8 +140,8 @@ const SellerDashboard = ({ sellerId }) => {
               />
               Show to buyers
             </label>
-          </div>
-        </div>
+          </Box>
+        </Box>
 
         <button type="submit" className="btn-add-product">
           Add Product
@@ -150,7 +150,7 @@ const SellerDashboard = ({ sellerId }) => {
 
       {/* Products list */}
       <h3 className="seller-subtitle">Your Products List</h3>
-      <div className="products-table-wrapper">
+      <Box className="products-table-wrapper">
         {products.length === 0 ? (
           <p className="no-products-msg">No products added yet.</p>
         ) : (
@@ -192,7 +192,7 @@ const SellerDashboard = ({ sellerId }) => {
             </tbody>
           </table>
         )}
-      </div>
+      </Box>
     </Box>
   );
 }

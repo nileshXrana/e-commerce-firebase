@@ -68,7 +68,7 @@ export default function Login() {
       const userDocSnap = await getDoc(userDocRef);
       if (userDocSnap.exists() && userDocSnap.data().disabled === true) {
         await signOut(auth);
-        setError("Your account has been disabled by the administrator.");
+        setError("Your account has been disabled.");
       } else {
         if(!userDocSnap.exists()) {
           await setDoc(userDocRef, {

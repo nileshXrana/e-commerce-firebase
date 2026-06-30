@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import { db } from "../lib/firebase";
-import { 
-  collection, 
-  addDoc, 
-  deleteDoc, 
-  updateDoc, 
-  doc, 
-  query, 
-  where, 
-  onSnapshot 
+import {
+  collection,
+  addDoc,
+  deleteDoc,
+  updateDoc,
+  doc,
+  query,
+  where,
+  onSnapshot
 } from "firebase/firestore";
 import "./styles/seller.css";
+import UploadButton from './UploadButton';
 
 const SellerDashboard = ({ sellerId }) => {
   const [products, setProducts] = useState([]);
@@ -20,6 +21,7 @@ const SellerDashboard = ({ sellerId }) => {
   const [description, setDescription] = useState("");
   const [show, setShow] = useState(true);
   const [activeTab, setActiveTab] = useState("productList");
+  const [images, setImages] = useState([]);
 
   useEffect(() => {
     if (!sellerId) return;
@@ -52,6 +54,7 @@ const SellerDashboard = ({ sellerId }) => {
         show,
         sellerId,
         createdAt: new Date(),
+        images: images || [],
       });
 
       // Reset form
@@ -111,6 +114,17 @@ const SellerDashboard = ({ sellerId }) => {
         <form onSubmit={handleAddProduct} className="add-product-form">
           <h3 style={{ margin: "0 0 1rem 0" }}>Add New Product</h3>
           <Box className="form-row">
+            <Box className="form-group-item">
+              <label htmlFor="image">Upload Image</label>
+              <UploadButton
+                signatureEndpoint="/api/sign-cloudinary-params"
+                className="seller-input"
+                onSuccess={(result) => {
+                  // append the uploaded image URL
+                  setImages([...images, result.info.secure_url]);
+                }}
+              />
+            </Box>
             <Box className="form-group-item">
               <label htmlFor="prod-name">Product Name</label>
               <input

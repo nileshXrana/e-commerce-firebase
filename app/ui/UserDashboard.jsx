@@ -9,6 +9,7 @@ import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { useRouter } from 'next/navigation';
 import "./styles/user.css";
 import "../page.css";
+import Image from 'next/image';
 
 const UserDashboard = () => {
   const router = useRouter();
@@ -46,6 +47,7 @@ const UserDashboard = () => {
         ...doc.data(),
       }));
       setProducts(productsList);
+      console.log("Fetched products:", productsList);
       setLoading(false);
     }, (error) => {
       console.error("Error fetching products:", error);
@@ -142,12 +144,16 @@ const UserDashboard = () => {
 
             return (
               <Box key={product.id} className="card">
-                <Box className="image-container">
-                  {product.image && (
-                    /* eslint-disable-next-line @next/next/no-img-element */
-                    <img src={product.image} alt={product.name} className="image" />
+                <div className="image-container">
+                  {product.images && product.images.length > 0 && ( 
+                    <Image
+                      src={product.images[0]}
+                      alt={product.name}
+                      width={325}
+                      height={210}
+                    />
                   )}
-                </Box>
+                </div>
                 <Box className="card-content">
                   <h2 className="title">{product.name}</h2>
                   <Box className="card-detail">

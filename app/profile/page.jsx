@@ -7,6 +7,7 @@ import { auth, db } from "../lib/firebase";
 import { useRouter } from "next/navigation";
 import Box from "@mui/material/Box";
 import "../ui/styles/profile.css";
+import RotateRightIcon from '@mui/icons-material/RotateRight';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -70,7 +71,7 @@ export default function ProfilePage() {
   if (loading) {
     return (
       <Box className="profile-container">
-        <p>Loading profile...</p>
+        <RotateRightIcon className="infiniteLoader"/>
       </Box>
     );
   }

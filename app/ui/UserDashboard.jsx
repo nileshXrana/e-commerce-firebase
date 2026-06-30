@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
@@ -10,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import "./styles/user.css";
 import "../page.css";
 import Image from 'next/image';
+import RotateRightIcon from '@mui/icons-material/RotateRight';
 
 const UserDashboard = () => {
   const router = useRouter();
@@ -107,7 +109,7 @@ const UserDashboard = () => {
   if (loading) {
     return (
       <Box className="user-dashboard">
-        <p>Loading products...</p>
+        <RotateRightIcon className="infiniteLoader"/>
       </Box>
     );
   }
@@ -131,8 +133,6 @@ const UserDashboard = () => {
           </IconButton>
         }
       />
-      <h2 className="user-title">Products</h2>
-      
       {products.length === 0 ? (
         <p className="no-products-msg">No products are currently available.</p>
       ) : (

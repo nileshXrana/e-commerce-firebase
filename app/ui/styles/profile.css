@@ -8,6 +8,22 @@
   box-sizing: border-box;
 }
 
+.infiniteLoader {
+  animation: spin 1s linear infinite;
+  transform-origin: center;
+  scale: 2;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .profile-card {
   width: 100%;
   max-width: 480px;

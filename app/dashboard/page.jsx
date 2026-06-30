@@ -9,6 +9,7 @@ import "../ui/styles/dashboard.css";
 import UserDashboard from "../ui/UserDashboard";
 import SellerDashboard from "../ui/SellerDashboard";
 import AdminDashboard from "../ui/AdminDashboard";
+import RotateRightIcon from '@mui/icons-material/RotateRight';
 
 export default function UserRoleComponent() {
   const [role, setRole] = useState(null);
@@ -45,7 +46,11 @@ export default function UserRoleComponent() {
     return () => unsubscribeAuth();
   }, []);
 
-  if (loading) return <p>Checking authorization...</p>;
+  if (loading) return (
+    <Box className="dash-container">
+      <RotateRightIcon className="infiniteLoader" />;
+    </Box>
+  )
 
   return (
     <Box className="dashboard-container">

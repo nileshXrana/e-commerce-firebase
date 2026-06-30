@@ -1,8 +1,12 @@
 .user-dashboard {
   width: 100%;
-  /* max-width: 1200px; */
+  height: 90vh;
   padding: 1rem;
   box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
 }
 
 .user-title {

@@ -20,16 +20,20 @@ export default function PrimarySearchAppBar() {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const isMenuOpen = Boolean(anchorEl);
     const [user, setUser] = React.useState(null);
-    const [cartCount, setCartCount] = React.useState(() => {
-        if (typeof window !== "undefined") {
-            const savedCart = localStorage.getItem("cart");
-            if (savedCart) {
-                const parsed = JSON.parse(savedCart);
-                return parsed.reduce((sum, item) => sum + item.quantity, 0);
-            }
+    const [cartCount, setCartCount] = React.useState(0);
+
+    React.useEffect(() => {
+    const savedCart = localStorage.getItem("cart");
+    if (savedCart) {
+        try {
+            const parsed = JSON.parse(savedCart);
+            const total = parsed.reduce((sum, item) => sum + item.quantity, 0);
+            setCartCount(total);
+        } catch (error) {
+            console.error("Error parsing cart data:", error);
         }
-        return 0;
-    });
+    }
+}, []);
     
     const router = useRouter();
 

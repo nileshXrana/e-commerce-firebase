@@ -8,6 +8,15 @@
   box-sizing: border-box;
 }
 
+.tabs-container {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.5rem;
+  padding: 2rem;
+}
+
 .infiniteLoader {
   animation: spin 1s linear infinite;
   transform-origin: center;

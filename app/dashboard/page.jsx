@@ -9,7 +9,7 @@ import "../ui/styles/dashboard.css";
 import UserDashboard from "../ui/UserDashboard";
 import SellerDashboard from "../ui/SellerDashboard";
 import AdminDashboard from "../ui/AdminDashboard";
-import RotateRightIcon from '@mui/icons-material/RotateRight';
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function UserRoleComponent() {
   const [role, setRole] = useState(null);
@@ -48,7 +48,7 @@ export default function UserRoleComponent() {
 
   if (loading) return (
     <Box className="dash-container">
-      <RotateRightIcon className="infiniteLoader" />;
+      <CircularProgress />
     </Box>
   )
 

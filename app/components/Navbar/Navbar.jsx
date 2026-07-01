@@ -24,18 +24,18 @@ export default function PrimarySearchAppBar() {
     const [cartCount, setCartCount] = React.useState(0);
 
     React.useEffect(() => {
-    const savedCart = localStorage.getItem("cart");
-    if (savedCart) {
-        try {
-            const parsed = JSON.parse(savedCart);
-            const total = parsed.reduce((sum, item) => sum + item.quantity, 0);
-            setCartCount(total);
-        } catch (error) {
-            console.error("Error parsing cart data:", error);
+        const savedCart = localStorage.getItem("cart");
+        if (savedCart) {
+            try {
+                const parsed = JSON.parse(savedCart);
+                const total = parsed.reduce((sum, item) => sum + item.quantity, 0);
+                setCartCount(total);
+            } catch (error) {
+                console.error("Error parsing cart data:", error);
+            }
         }
-    }
-}, []);
-    
+    }, []);
+
     const router = useRouter();
 
     React.useEffect(() => {
@@ -99,7 +99,7 @@ export default function PrimarySearchAppBar() {
         >
             <MenuItem onClick={handleMenuClose}>
                 <Link href="/profile" style={{ textDecoration: 'none', color: 'inherit', width: '100%', display: 'block' }}>
-                    Profile
+                    Setting
                 </Link>
             </MenuItem>
             <MenuItem onClick={() => {
@@ -120,18 +120,9 @@ export default function PrimarySearchAppBar() {
             bgcolor: 'background.paper',
             zIndex: 10
         }}>
-            <AppBar position="static">
+            <AppBar position="static" sx={{bgcolor: '#000000e8'}}>
                 <Toolbar>
-                    <Drawer/>
-                    {/* <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        sx={{ mr: 2 }}
-                    >
-                        <MenuIcon />
-                    </IconButton> */}
+                    <Drawer />
                     <Typography
                         variant="h6"
                         noWrap

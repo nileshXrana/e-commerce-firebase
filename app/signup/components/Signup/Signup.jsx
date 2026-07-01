@@ -81,11 +81,14 @@ export default function Signup() {
   };
 
   return (
-    <Box className="signup-container">
+    <Box className="signup-container" sx={{backgroundImage: "url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGHmYYIFaszytiNPAG8h-E738z8NgcGRagcYWspLaYm47ol5Z4g7zlcJs&s=10)",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+    }}>
       <Box className="signup-card">
         <Box className="signup-header">
           <h2 className="signup-title">Create an account</h2>
-          <p className="signup-subtitle">Sign Up Now !</p>
         </Box>
 
         {error && (

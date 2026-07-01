@@ -12,42 +12,89 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import IconButton from '@mui/material/IconButton';
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+import { useRouter } from 'next/navigation';
+import { signOut } from "firebase/auth";
+import { auth } from "@/app/services/firebase.service";
 
 export default function TemporaryDrawer() {
     const [open, setOpen] = React.useState(false);
+    const router = useRouter();
 
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
     };
 
+    const handleLogout = () => {
+        signOut(auth)
+            .then(() => {
+                console.log("User logged out");
+                router.push("/");
+            })
+            .catch((error) => {
+                console.error("Logout failed", error);
+            });
+    };
+
     const DrawerList = (
-        <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
+        <Box sx={{ width: 300, height: '100%', bgcolor: '#6f94cc2d' }} role="presentation" onClick={toggleDrawer(false)}>
             <List>
-                {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                            </ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
+                <ListItem disablePadding>
+                    <ListItemButton onClick={()=>{router.push('/profile')}}>
+                        <ListItemIcon>
+                            <AccountCircleOutlinedIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Profile" />
+                    </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                    <ListItemButton onClick={()=>{router.push('/cart')}}>
+                        <ListItemIcon>
+                            <AddShoppingCartOutlinedIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="My Cart" />
+                    </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                    <ListItemButton onClick={()=>{router.push('/favourites')}}>
+                        <ListItemIcon>
+                            <FavoriteBorderOutlinedIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Favourites" />
+                    </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                    <ListItemButton onClick={()=>{router.push('/profile')}}>
+                        <ListItemIcon>
+                            <SettingsOutlinedIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Settings" />
+                    </ListItemButton>
+                </ListItem>
             </List>
             <Divider />
             <List>
-                {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
+                <ListItem disablePadding>
+                    {auth.currentUser ? (
+                        <ListItemButton onClick={handleLogout}>
                             <ListItemIcon>
-                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                                <LogoutOutlinedIcon />
                             </ListItemIcon>
-                            <ListItemText primary={text} />
+                            <ListItemText primary="Logout" />
                         </ListItemButton>
-                    </ListItem>
-                ))}
+                    ) : <ListItemButton onClick={()=>{router.push('/login')}}>
+                            <ListItemIcon>
+                                <LogoutOutlinedIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Login" />
+                        </ListItemButton>}
+                </ListItem>
             </List>
-        </Box>
+        </Box>  
     );
 
     return (

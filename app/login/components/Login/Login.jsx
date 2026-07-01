@@ -87,7 +87,11 @@ export default function Login() {
   };
 
   return (
-    <Box className="login-container">
+    <Box className="login-container" sx={{backgroundImage: "url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGHmYYIFaszytiNPAG8h-E738z8NgcGRagcYWspLaYm47ol5Z4g7zlcJs&s=10)",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+    }}>
       <Box className="login-card">
         <div className="login-header">
           <h2 className="login-title">Welcome Back</h2>

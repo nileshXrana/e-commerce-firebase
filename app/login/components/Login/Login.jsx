@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import './styles/login.css';
+import './Login.css';
 import Box from '@mui/material/Box';
-import { auth, googleProvider, db } from "../lib/firebase";
+import { auth, googleProvider, db } from "@/app/services/firebase.service";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
 import { signInWithEmailAndPassword } from "firebase/auth";

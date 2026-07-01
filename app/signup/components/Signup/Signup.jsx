@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { auth, db } from "../lib/firebase";
+import { auth, db } from "@/app/services/firebase.service";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import Link from "next/link";
 import Box from '@mui/material/Box';
@@ -10,7 +10,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import "./styles/signup.css";
+import "./Signup.css";
 
 const signupSchema = z.object({
   name: z.string().min(4, "Name must be at least 4 characters"),

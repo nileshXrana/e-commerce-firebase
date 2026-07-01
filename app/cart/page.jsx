@@ -8,14 +8,14 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../lib/firebase";
+import { auth } from "@/app/services/firebase.service";
 import "../page.css";
-import "./cart.css";
+import "./page.css";
 import Box from '@mui/material/Box';
 
 export default function Cart() {
   const router = useRouter();
-  const [checkingAuth, setCheckingAuth] = useState(true);
+  const [checkingAuth, setCheckingAuth] = useState(false);
   const [cart, setCart] = useState(() => {
     if (typeof window !== "undefined") {
       const savedCart = localStorage.getItem("cart");
@@ -27,16 +27,16 @@ export default function Cart() {
   });
   const [open, setOpen] = React.useState(false);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        router.push("/login");
-      } else {
-        setCheckingAuth(false);
-      }
-    });
-    return () => unsubscribe();
-  }, [router]);
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
+  //     if (!user) {
+  //       router.push("/login");
+  //     } else {
+  //       setCheckingAuth(false);
+  //     }
+  //   });
+  //   return () => unsubscribe();
+  // }, [router]);
 
   const handleClick = () => {
     setOpen(true);
@@ -50,7 +50,7 @@ export default function Cart() {
   };
 
   const action = (
-    <React.Fragment>  
+    <React.Fragment>
       <IconButton
         size="small"
         aria-label="close"
@@ -93,8 +93,17 @@ export default function Cart() {
   const total = subtotal + shippingCharge;
 
   const handlePlaceOrder = () => {
-    updateCart([]);
-    handleClick();
+    setCheckingAuth(true);
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        router.push("/login");
+      } else {
+        setCheckingAuth(false);
+        updateCart([]);
+        handleClick();
+      }
+    });
+    return () => unsubscribe();
   };
 
   if (checkingAuth) {

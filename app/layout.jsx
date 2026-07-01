@@ -1,7 +1,12 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter'; // Use v15/v16 package version accordingly
 import "./globals.css";
-import Navbar from "./ui/Navbar";
+import Navbar from "./components/Navbar/Navbar";
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

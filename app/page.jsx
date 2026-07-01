@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import Landing from './ui/Landing';
+import Landing from './components/Landing/Landing';
 
 export default function Home() {
   return (

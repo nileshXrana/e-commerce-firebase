@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
-import { db } from "../lib/firebase";
+import { db } from "@/app/services/firebase.service";
 import { collection, onSnapshot, doc, deleteDoc, updateDoc } from "firebase/firestore";
-import "./styles/admin.css";
+import "./AdminDashboard.css";
 
 const AdminDashboard = () => {
   const [usersList, setUsersList] = useState([]);

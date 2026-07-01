@@ -4,8 +4,8 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Link from 'next/link';
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "../lib/firebase";
-import './styles/landing.css';
+import { auth } from "@/app/services/firebase.service";
+import './Landing.css';
 
 export default function Landing() {
     const [user, setUser] = useState(null);

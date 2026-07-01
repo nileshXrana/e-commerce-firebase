@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
-import { db } from "../lib/firebase";
+import { db } from "@/app/services/firebase.service";
 import {
   collection,
   addDoc,
@@ -11,8 +11,8 @@ import {
   where,
   onSnapshot
 } from "firebase/firestore";
-import "./styles/seller.css";
-import UploadButton from './UploadButton';
+import "./SellerDashboard.css";
+import UploadButton from './components/UploadButton/UploadButton';
 
 const SellerDashboard = ({ sellerId }) => {
   const [products, setProducts] = useState([]);

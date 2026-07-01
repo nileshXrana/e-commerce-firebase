@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { db } from "../lib/firebase";
+import { db } from "@/app/services/firebase.service";
 import Box from '@mui/material/Box';
 import { doc, getDoc } from "firebase/firestore";
-import "../ui/styles/dashboard.css";
-import UserDashboard from "../ui/UserDashboard";
-import SellerDashboard from "../ui/SellerDashboard";
-import AdminDashboard from "../ui/AdminDashboard";
+import "./page.css";
+import UserDashboard from "./components/UserDashboard/UserDashboard";
+import SellerDashboard from "./components/SellerDashboard/SellerDashboard"
+import AdminDashboard from "./components/AdminDashboard/AdminDashboard";
 import CircularProgress from '@mui/material/CircularProgress';
 
 export default function UserRoleComponent() {

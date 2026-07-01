@@ -8,4 +8,4 @@ function UploadButton(props) {
 
 }
 
-export default UploadButton;    
+export default UploadButton;

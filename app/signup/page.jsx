@@ -1,4 +1,4 @@
-import Signup from "../ui/Signup";
+import Signup from "./components/Signup/Signup";
 import Box from '@mui/material/Box';
 
 export default function SignupPage() {

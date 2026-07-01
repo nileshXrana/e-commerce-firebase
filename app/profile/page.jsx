@@ -3,11 +3,10 @@
 import React, { useEffect, useState } from "react";
 import { onAuthStateChanged, updatePassword } from "firebase/auth";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { auth, db } from "../lib/firebase";
+import { auth, db } from "@/app/services/firebase.service";
 import { useRouter } from "next/navigation";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
@@ -28,25 +27,25 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 
-import "../ui/styles/profile.css";
+import "./page.css";
 
 export default function ProfilePage() {
   const router = useRouter();
   const [user, setUser] = useState(null);
-  
+
   // General info state
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
-  
+
   // Address tab state
   const [addresses, setAddresses] = useState([]);
   const [newAddressLine, setNewAddressLine] = useState("");
-  
+
   // Privacy tab state
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  
+
   // Global loading/saving & notifications state
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -82,7 +81,6 @@ export default function ProfilePage() {
     return () => unsubscribe();
   }, [router]);
 
-  // Clear messages when user switches tabs
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
     setMessage({ text: "", type: "" });
@@ -111,7 +109,6 @@ export default function ProfilePage() {
     }
   };
 
-  // Address tab: add address to firestore
   const handleAddAddress = async (e) => {
     e.preventDefault();
     if (!user || !newAddressLine.trim()) return;
@@ -141,7 +138,6 @@ export default function ProfilePage() {
     }
   };
 
-  // Address tab: delete address
   const handleDeleteAddress = async (id) => {
     if (!user) return;
 
@@ -149,9 +145,8 @@ export default function ProfilePage() {
     const targetAddress = addresses.find(addr => addr.id === id);
     let updatedAddresses = addresses.filter(addr => addr.id !== id);
 
-    // If we deleted the default address, promote another one if available
     if (targetAddress?.isDefault && updatedAddresses.length > 0) {
-      updatedAddresses = updatedAddresses.map((addr, idx) => 
+      updatedAddresses = updatedAddresses.map((addr, idx) =>
         idx === 0 ? { ...addr, isDefault: true } : addr
       );
     }
@@ -167,7 +162,6 @@ export default function ProfilePage() {
     }
   };
 
-  // Address tab: set an address as default
   const handleMakeDefaultAddress = async (id) => {
     if (!user) return;
 
@@ -188,7 +182,6 @@ export default function ProfilePage() {
     }
   };
 
-  // Privacy tab: change password in firebase auth
   const handleChangePassword = async (e) => {
     e.preventDefault();
     if (!auth.currentUser) return;
@@ -214,9 +207,9 @@ export default function ProfilePage() {
     } catch (error) {
       console.error("Error updating password:", error);
       if (error.code === "auth/requires-recent-login") {
-        setMessage({ 
-          text: "For security reasons, please log out and log back in to change your password.", 
-          type: "error" 
+        setMessage({
+          text: "For security reasons, please log out and log back in to change your password.",
+          type: "error"
         });
       } else {
         setMessage({ text: error.message || "Failed to update password.", type: "error" });
@@ -243,10 +236,10 @@ export default function ProfilePage() {
 
         <Card sx={{ minHeight: "550px", display: "flex", flexDirection: "column", borderRadius: "12px", border: "1px solid #e5e7eb", boxShadow: "0 4px 12px rgba(0,0,0,0.05)", bgcolor: "#ffffff" }}>
           <Box sx={{ borderBottom: 1, borderColor: "divider", px: 2, pt: 1 }}>
-            <Tabs 
-              value={activeTab} 
-              onChange={handleTabChange} 
-              textColor="primary" 
+            <Tabs
+              value={activeTab}
+              onChange={handleTabChange}
+              textColor="primary"
               indicatorColor="primary"
               variant="fullWidth"
             >
@@ -276,7 +269,7 @@ export default function ProfilePage() {
                     fullWidth
                     required
                   />
-                  
+
                   <TextField
                     label="Email address"
                     value={email}
@@ -293,13 +286,13 @@ export default function ProfilePage() {
                     sx={{ textTransform: "capitalize" }}
                   />
 
-                  <Button 
-                    type="submit" 
-                    variant="contained" 
+                  <Button
+                    type="submit"
+                    variant="contained"
                     disabled={saving}
-                    sx={{ 
-                      bgcolor: "#000000", 
-                      color: "#ffffff", 
+                    sx={{
+                      bgcolor: "#000000",
+                      color: "#ffffff",
                       fontWeight: 600,
                       alignSelf: "flex-start",
                       px: 3,
@@ -321,7 +314,7 @@ export default function ProfilePage() {
                   <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
                     Your Addresses
                   </Typography>
-                  
+
                   {addresses.length === 0 ? (
                     <Typography variant="body2" color="text.secondary" sx={{ fontStyle: "italic" }}>
                       No saved addresses found. Please add an address below.
@@ -329,13 +322,14 @@ export default function ProfilePage() {
                   ) : (
                     <List sx={{ width: "100%", p: 0 }}>
                       {addresses.map((addr, index) => (
-                        <ListItem 
+                        <ListItem
                           key={addr.id}
-                          sx={{ 
-                            px: 2, 
-                            py: 1.5, 
-                            border: "1px solid #e5e7eb", 
-                            borderRadius: "8px", 
+                          component="div"
+                          sx={{
+                            px: 2,
+                            py: 1.5,
+                            border: "1px solid #e5e7eb",
+                            borderRadius: "8px",
                             mb: index !== addresses.length - 1 ? 2 : 0,
                             display: "flex",
                             flexDirection: { xs: "column", sm: "row" },
@@ -344,30 +338,29 @@ export default function ProfilePage() {
                             gap: 2
                           }}
                         >
-                          <ListItemText 
-                            primary={addr.addressLine} 
-                            primaryTypographyProps={{ variant: "body1", sx: { fontWeight: 500 } }}
+                          <ListItemText
+                            primary={addr.addressLine}
                             secondary={
                               addr.isDefault && (
-                                <Chip label="Default" size="small" color="primary" sx={{ mt: 0.5, fontWeight: 600 }} />
+                                <Chip component="span" label="Default" size="small" color="primary" sx={{ mt: 0.5, fontWeight: 600 }} />
                               )
                             }
                           />
                           <Stack direction="row" spacing={1} sx={{ alignSelf: { xs: "flex-end", sm: "center" } }}>
                             {!addr.isDefault && (
-                              <Button 
-                                size="small" 
-                                variant="outlined" 
+                              <Button
+                                size="small"
+                                variant="outlined"
                                 onClick={() => handleMakeDefaultAddress(addr.id)}
                                 sx={{ textTransform: "none", fontWeight: 600 }}
                               >
                                 Make Default
                               </Button>
                             )}
-                            <Button 
-                              size="small" 
-                              variant="outlined" 
-                              color="error" 
+                            <Button
+                              size="small"
+                              variant="outlined"
+                              color="error"
                               onClick={() => handleDeleteAddress(addr.id)}
                               sx={{ textTransform: "none", fontWeight: 600 }}
                             >
@@ -386,7 +379,7 @@ export default function ProfilePage() {
                   <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1.5 }}>
                     Add New Address
                   </Typography>
-                  <Stack spacing={2} direction={{ xs: "column", sm: "row" }} alignItems="stretch">
+                  <Stack spacing={2} direction={{ xs: "column", sm: "row" }} >
                     <TextField
                       label="Address details"
                       placeholder="Enter new address..."
@@ -396,13 +389,13 @@ export default function ProfilePage() {
                       fullWidth
                       size="small"
                     />
-                    <Button 
-                      type="submit" 
-                      variant="contained" 
+                    <Button
+                      type="submit"
+                      variant="contained"
                       disabled={saving}
-                      sx={{ 
-                        bgcolor: "#000000", 
-                        color: "#ffffff", 
+                      sx={{
+                        bgcolor: "#000000",
+                        color: "#ffffff",
                         fontWeight: 600,
                         px: 3,
                         textTransform: "none",
@@ -445,13 +438,13 @@ export default function ProfilePage() {
                     required
                   />
 
-                  <Button 
-                    type="submit" 
-                    variant="contained" 
+                  <Button
+                    type="submit"
+                    variant="contained"
                     disabled={saving}
-                    sx={{ 
-                      bgcolor: "#000000", 
-                      color: "#ffffff", 
+                    sx={{
+                      bgcolor: "#000000",
+                      color: "#ffffff",
                       fontWeight: 600,
                       alignSelf: "flex-start",
                       px: 3,

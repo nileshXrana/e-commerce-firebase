@@ -15,9 +15,10 @@ import CardActions from '@mui/material/CardActions';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
-import { db, auth } from "../lib/firebase";
+import { db, auth } from "@/app/services/firebase.service";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 const UserDashboard = () => {
   const router = useRouter();
@@ -69,7 +70,6 @@ const UserDashboard = () => {
     };
   }, []);
 
-  // Update "details of now" clock when modal is open
   useEffect(() => {
     if (!selectedProduct) return;
     setNow(new Date());
@@ -86,10 +86,6 @@ const UserDashboard = () => {
   };
 
   const addToCart = (product) => {
-    if (!auth.currentUser) {
-      router.push("/login");
-      return;
-    }
     const existing = cart.find(item => item.id === product.id);
     let newCart;
     if (existing) {
@@ -129,8 +125,7 @@ const UserDashboard = () => {
     );
   }
 
-  // Find currently active product details (to reactively sync cart counts inside dialog)
-  const activeProductInDialog = selectedProduct 
+  const activeProductInDialog = selectedProduct
     ? (products.find(p => p.id === selectedProduct.id) || selectedProduct)
     : null;
 
@@ -159,8 +154,8 @@ const UserDashboard = () => {
       />
 
       {products.length === 0 ? (
-        <Typography 
-          variant="body1" 
+        <Typography
+          variant="body1"
           sx={{ textAlign: 'center', color: 'text.secondary', py: 8, fontStyle: 'italic' }}
         >
           No products are currently available.
@@ -174,23 +169,23 @@ const UserDashboard = () => {
 
             return (
               <Grid size={{ xs: 12, sm: 6, md: 3 }} key={product.id} sx={{ display: 'flex' }}>
-                <Card 
-                  sx={{ 
+                <Card
+                  sx={{
                     width: '100%',
-                    height: '100%', 
-                    display: 'flex', 
-                    flexDirection: 'column', 
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
                     borderRadius: '8px',
                     border: '1px solid #e5e7eb',
-                    boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.56)',
                     transition: 'transform 0.2s, box-shadow 0.2s',
                     '&:hover': {
                       transform: 'translateY(-4px)',
-                      boxShadow: '0 8px 16px rgba(0,0,0,0.1)'
+                      boxShadow: '0 8px 16px rgb(0, 0, 0)'
                     }
                   }}
                 >
-                  <CardActionArea 
+                  <CardActionArea
                     onClick={() => setSelectedProduct(product)}
                     sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}
                   >
@@ -211,11 +206,11 @@ const UserDashboard = () => {
                       <Typography variant="caption" sx={{ textTransform: 'uppercase', color: 'text.secondary', fontWeight: 'bold' }}>
                         Seller: {sellers[product.sellerId] || "Loading..."}
                       </Typography>
-                      <Typography 
-                        variant="subtitle1" 
-                        component="h2" 
-                        sx={{ 
-                          fontWeight: 600, 
+                      <Typography
+                        variant="subtitle1"
+                        component="h2"
+                        sx={{
+                          fontWeight: 600,
                           lineHeight: 1.4,
                           display: '-webkit-box',
                           WebkitLineClamp: 2,
@@ -226,10 +221,10 @@ const UserDashboard = () => {
                       >
                         {product.name}
                       </Typography>
-                      <Typography 
-                        variant="body2" 
+                      <Typography
+                        variant="body2"
                         color="text.secondary"
-                        sx={{ 
+                        sx={{
                           display: '-webkit-box',
                           WebkitLineClamp: 2,
                           WebkitBoxOrient: 'vertical',
@@ -244,7 +239,7 @@ const UserDashboard = () => {
                       </Typography>
                     </CardContent>
                   </CardActionArea>
-                  
+
                   <CardActions sx={{ p: 2, pt: 0 }}>
                     {!isAdded ? (
                       <Button
@@ -255,10 +250,10 @@ const UserDashboard = () => {
                           addToCart(product);
                           setOpen(true);
                         }}
-                        sx={{ 
-                          bgcolor: '#000000', 
-                          color: '#ffffff', 
-                          textTransform: 'none', 
+                        sx={{
+                          bgcolor: '#000000',
+                          color: '#ffffff',
+                          textTransform: 'none',
                           fontWeight: 600,
                           '&:hover': { bgcolor: '#1f2937' }
                         }}
@@ -266,21 +261,21 @@ const UserDashboard = () => {
                         Add to Cart
                       </Button>
                     ) : (
-                      <Box 
-                        sx={{ 
-                          display: 'flex', 
-                          alignItems: 'center', 
-                          justifyContent: 'space-between', 
-                          width: '100%', 
-                          bgcolor: '#f3f4f6', 
-                          border: '1px solid #d1d5db', 
-                          borderRadius: '4px', 
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          width: '100%',
+                          bgcolor: '#f3f4f6',
+                          border: '1px solid #d1d5db',
+                          borderRadius: '4px',
                           height: '36.5px',
                           overflow: 'hidden'
                         }}
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <Button 
+                        <Button
                           onClick={(e) => { e.stopPropagation(); decreaseQty(product.id); }}
                           sx={{ minWidth: '40px', color: '#374151', fontSize: '1.25rem', fontWeight: 600 }}
                         >
@@ -289,7 +284,7 @@ const UserDashboard = () => {
                         <Typography sx={{ fontSize: '0.95rem', fontWeight: 600, color: '#111827' }}>
                           {qty}
                         </Typography>
-                        <Button 
+                        <Button
                           onClick={(e) => { e.stopPropagation(); addToCart(product); }}
                           sx={{ minWidth: '40px', color: '#374151', fontSize: '1.25rem', fontWeight: 600 }}
                         >
@@ -311,14 +306,11 @@ const UserDashboard = () => {
         onClose={() => setSelectedProduct(null)}
         maxWidth="md"
         fullWidth
-        PaperProps={{
-          sx: { borderRadius: '12px', overflow: 'hidden' }
-        }}
       >
         {activeProductInDialog && (
           <>
             <DialogTitle sx={{ m: 0, p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e5e7eb' }}>
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>Product Details</Typography>
+              <Typography component="div" variant="h6" sx={{ fontWeight: 600 }}>Product Details</Typography>
               <IconButton
                 aria-label="close"
                 onClick={() => setSelectedProduct(null)}
@@ -331,23 +323,25 @@ const UserDashboard = () => {
               <Grid container spacing={4}>
                 <Grid size={{ xs: 12, md: 6 }}>
                   {activeProductInDialog.images && activeProductInDialog.images.length > 0 ? (
-                    <Box 
-                      sx={{ 
-                        width: '100%', 
-                        height: { xs: '250px', md: '350px' }, 
-                        display: 'flex', 
-                        justifyContent: 'center', 
-                        alignItems: 'center', 
-                        bgcolor: '#f8fafc', 
-                        borderRadius: '8px', 
-                        overflow: 'hidden', 
-                        border: '1px solid #e5e7eb' 
+                    <Box
+                      sx={{
+                        width: '100%',
+                        height: { xs: '250px', md: '350px' },
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        bgcolor: '#f8fafc',
+                        borderRadius: '8px',
+                        overflow: 'hidden',
+                        border: '1px solid #e5e7eb'
                       }}
                     >
-                      <img
-                        src={activeProductInDialog.images[0]} 
-                        alt={activeProductInDialog.name} 
-                        style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+                      <Image
+                        src={activeProductInDialog.images[0]}
+                        alt={activeProductInDialog.name}
+                        width={405}
+                        height={350}
+                        style={{objectFit: 'fill' }}
                       />
                     </Box>
                   ) : (
@@ -376,13 +370,13 @@ const UserDashboard = () => {
 
                   <Box sx={{ mt: 'auto', p: 2.5, bgcolor: '#f8fafc', borderRadius: '8px', border: '1px solid #e5e7eb' }}>
                     <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 1, color: '#1f2937' }}>
-                      Details of Now
-                    </Typography>
-                    
+                      Buy Now
+                    </Typography> 
+
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                      As of: {now.toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                      {isDialogItemAdded ? `You have ${dialogQty} of this item in your cart.` : "This item is not in your cart yet."} 
                     </Typography>
-                    
+
                     {!isDialogItemAdded ? (
                       <Button
                         variant="contained"
@@ -391,10 +385,10 @@ const UserDashboard = () => {
                           addToCart(activeProductInDialog);
                           setOpen(true);
                         }}
-                        sx={{ 
-                          bgcolor: '#000000', 
-                          color: '#ffffff', 
-                          textTransform: 'none', 
+                        sx={{
+                          bgcolor: '#000000',
+                          color: '#ffffff',
+                          textTransform: 'none',
                           fontWeight: 600,
                           py: 1,
                           '&:hover': { bgcolor: '#1f2937' }
@@ -404,7 +398,7 @@ const UserDashboard = () => {
                       </Button>
                     ) : (
                       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', bgcolor: '#ffffff', border: '1px solid #d1d5db', borderRadius: '4px', height: '40px', overflow: 'hidden' }}>
-                        <Button 
+                        <Button
                           onClick={() => decreaseQty(activeProductInDialog.id)}
                           sx={{ minWidth: '50px', color: '#374151', fontSize: '1.25rem', fontWeight: 600, height: '100%' }}
                         >
@@ -413,7 +407,7 @@ const UserDashboard = () => {
                         <Typography sx={{ fontSize: '1rem', fontWeight: 600, color: '#111827' }}>
                           {dialogQty}
                         </Typography>
-                        <Button 
+                        <Button
                           onClick={() => addToCart(activeProductInDialog)}
                           sx={{ minWidth: '50px', color: '#374151', fontSize: '1.25rem', fontWeight: 600, height: '100%' }}
                         >

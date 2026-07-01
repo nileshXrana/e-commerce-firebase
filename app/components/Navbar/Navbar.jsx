@@ -13,7 +13,7 @@ import Badge from '@mui/material/Badge';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Link from 'next/link';
 import { signOut, onAuthStateChanged } from "firebase/auth";
-import { auth } from "../lib/firebase";
+import { auth } from "@/app/services/firebase.service";
 import { useRouter } from 'next/navigation';
 
 export default function PrimarySearchAppBar() {

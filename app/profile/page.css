@@ -1,9 +1,9 @@
 .profile-container {
-  display: flex;
+  /* display: flex; */
   justify-content: center;
   align-items: center;
-  min-height: 80vh;
-  background-color: #f9fafb;
+  min-height: calc(100vh - 4rem);
+  background-color: #bdbdbd33;
   padding: 2rem;
   box-sizing: border-box;
 }

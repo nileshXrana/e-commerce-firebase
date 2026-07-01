@@ -1,5 +1,6 @@
 "use client";
 
+import "./page.css";
 import React, { useEffect, useState } from "react";
 import { onAuthStateChanged, updatePassword } from "firebase/auth";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
@@ -27,26 +28,25 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 
-import "./page.css";
 
 export default function ProfilePage() {
   const router = useRouter();
   const [user, setUser] = useState(null);
 
-  // General info state
+  // General tab
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
 
-  // Address tab state
+  // Address tab
   const [addresses, setAddresses] = useState([]);
   const [newAddressLine, setNewAddressLine] = useState("");
 
-  // Privacy tab state
+  // Privacy tab
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  // Global loading/saving & notifications state
+  // loading and saving
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState({ text: "", type: "" }); // types: "success", "error"
@@ -221,7 +221,7 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <Box className="profile-container">
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "calc(100vh - 8rem)" }}>
         <CircularProgress />
       </Box>
     );
@@ -230,12 +230,14 @@ export default function ProfilePage() {
   return (
     <Box className="profile-container" sx={{ flexDirection: "column" }}>
       <Container maxWidth="md">
-        <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 700, mb: 3, textAlign: "center" }}>
-          Profile Settings
+        <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 700, mb: 3, textAlign: "center" , fontFamily: "Arial, sans-serif", color: "#222d47" }}>
+          Manage Your Profile Settings
         </Typography>
 
-        <Card sx={{ minHeight: "550px", display: "flex", flexDirection: "column", borderRadius: "12px", border: "1px solid #e5e7eb", boxShadow: "0 4px 12px rgba(0,0,0,0.05)", bgcolor: "#ffffff" }}>
-          <Box sx={{ borderBottom: 1, borderColor: "divider", px: 2, pt: 1 }}>
+        <Card sx={{ minHeight: "70vh" , border: "1px solid #00000036", boxShadow: "0 4px 12px rgba(0,0,0,0.05)", bgcolor: "#ffffffcc" , backgroundImage: `url('https://img.magnific.com/free-photo/minimalist-blue-white-wave-background_1017-46756.jpg?semt=ais_hybrid&w=740&q=80')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center', }}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider", px: 2, pt: 1 }}> 
             <Tabs
               value={activeTab}
               onChange={handleTabChange}
@@ -328,7 +330,7 @@ export default function ProfilePage() {
                           sx={{
                             px: 2,
                             py: 1.5,
-                            border: "1px solid #e5e7eb",
+                            border: "1px solid #0000004f",
                             borderRadius: "8px",
                             mb: index !== addresses.length - 1 ? 2 : 0,
                             display: "flex",
@@ -337,7 +339,7 @@ export default function ProfilePage() {
                             justifyContent: "space-between",
                             gap: 2
                           }}
-                        >
+                        > 
                           <ListItemText
                             primary={addr.addressLine}
                             secondary={
@@ -382,7 +384,7 @@ export default function ProfilePage() {
                   <Stack spacing={2} direction={{ xs: "column", sm: "row" }} >
                     <TextField
                       label="Address details"
-                      placeholder="Enter new address..."
+                      placeholder="Enter new address"
                       value={newAddressLine}
                       onChange={(e) => setNewAddressLine(e.target.value)}
                       required
@@ -466,20 +468,20 @@ export default function ProfilePage() {
                   Frequently Asked Questions (FAQ)
                 </Typography>
 
-                <Accordion sx={{ border: "1px solid #e5e7eb", boxShadow: "none", "&:before": { display: "none" }, borderRadius: "8px", overflow: "hidden" }}>
+                <Accordion sx={{ border: "1px solid #00000067", boxShadow: "none", "&:before": { display: "none" }, borderRadius: "8px", overflow: "hidden" }}>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography sx={{ fontWeight: 600 }}>How do I track my order?</Typography>
+                    <Typography sx={{ fontWeight: 500 }}>How do I track my order?</Typography>
                   </AccordionSummary>
-                  <AccordionDetails sx={{ borderTop: "1px solid #e5e7eb" }}>
+                  <AccordionDetails sx={{ borderTop: "1px solid #e5e7eb" }}>  
                     <Typography variant="body2" color="text.secondary">
                       You can track your order status in the Order History tab on your profile dashboard (currently under construction) or by clicking the tracking link in the shipping email confirmation sent by the seller.
                     </Typography>
                   </AccordionDetails>
                 </Accordion>
 
-                <Accordion sx={{ border: "1px solid #e5e7eb", boxShadow: "none", "&:before": { display: "none" }, borderRadius: "8px", overflow: "hidden" }}>
+                <Accordion sx={{ border: "1px solid #00000067", boxShadow: "none", "&:before": { display: "none" }, borderRadius: "8px", overflow: "hidden" }}>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography sx={{ fontWeight: 600 }}>What is the return policy?</Typography>
+                    <Typography sx={{ fontWeight: 500 }}>What is the return policy?</Typography>
                   </AccordionSummary>
                   <AccordionDetails sx={{ borderTop: "1px solid #e5e7eb" }}>
                     <Typography variant="body2" color="text.secondary">
@@ -488,9 +490,9 @@ export default function ProfilePage() {
                   </AccordionDetails>
                 </Accordion>
 
-                <Accordion sx={{ border: "1px solid #e5e7eb", boxShadow: "none", "&:before": { display: "none" }, borderRadius: "8px", overflow: "hidden" }}>
+                <Accordion sx={{ border: "1px solid #00000067", boxShadow: "none", "&:before": { display: "none" }, borderRadius: "8px", overflow: "hidden" }}>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography sx={{ fontWeight: 600 }}>How can I contact a seller?</Typography>
+                    <Typography sx={{ fontWeight: 500 }}>How can I contact a seller?</Typography>
                   </AccordionSummary>
                   <AccordionDetails sx={{ borderTop: "1px solid #e5e7eb" }}>
                     <Typography variant="body2" color="text.secondary">
@@ -499,9 +501,9 @@ export default function ProfilePage() {
                   </AccordionDetails>
                 </Accordion>
 
-                <Accordion sx={{ border: "1px solid #e5e7eb", boxShadow: "none", "&:before": { display: "none" }, borderRadius: "8px", overflow: "hidden" }}>
+                <Accordion sx={{ border: "1px solid #00000067", boxShadow: "none", "&:before": { display: "none" }, borderRadius: "8px", overflow: "hidden" }}>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography sx={{ fontWeight: 600 }}>What payment methods are supported?</Typography>
+                    <Typography sx={{ fontWeight: 500  }}>What payment methods are supported?</Typography>
                   </AccordionSummary>
                   <AccordionDetails sx={{ borderTop: "1px solid #e5e7eb" }}>
                     <Typography variant="body2" color="text.secondary">

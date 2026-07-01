@@ -15,6 +15,7 @@ import Link from 'next/link';
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/app/services/firebase.service";
 import { useRouter } from 'next/navigation';
+import Drawer from '../Drawer/Drawer';
 
 export default function PrimarySearchAppBar() {
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -121,7 +122,8 @@ export default function PrimarySearchAppBar() {
         }}>
             <AppBar position="static">
                 <Toolbar>
-                    <IconButton
+                    <Drawer/>
+                    {/* <IconButton
                         size="large"
                         edge="start"
                         color="inherit"
@@ -129,7 +131,7 @@ export default function PrimarySearchAppBar() {
                         sx={{ mr: 2 }}
                     >
                         <MenuIcon />
-                    </IconButton>
+                    </IconButton> */}
                     <Typography
                         variant="h6"
                         noWrap

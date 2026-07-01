@@ -9,12 +9,10 @@ import "./page.css";
 import UserDashboard from "./components/UserDashboard/UserDashboard";
 import SellerDashboard from "./components/SellerDashboard/SellerDashboard"
 import AdminDashboard from "./components/AdminDashboard/AdminDashboard";
-import CircularProgress from '@mui/material/CircularProgress';
 
 export default function UserRoleComponent() {
   const [role, setRole] = useState(null);
   const [uid, setUid] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const auth = getAuth();
@@ -40,17 +38,10 @@ export default function UserRoleComponent() {
         setRole("Guest / Logged Out");
         setUid(null);
       }
-      setLoading(false);
     });
 
     return () => unsubscribeAuth();
   }, []);
-
-  if (loading) return (
-    <Box className="dash-container">
-      <CircularProgress />
-    </Box>
-  )
 
   return (
     <Box className="dashboard-container">

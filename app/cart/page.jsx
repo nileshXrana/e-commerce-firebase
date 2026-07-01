@@ -9,7 +9,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/app/services/firebase.service";
-import "../page.css";
 import "./page.css";
 import Box from '@mui/material/Box';
 
@@ -26,17 +25,6 @@ export default function Cart() {
     return [];
   });
   const [open, setOpen] = React.useState(false);
-
-  // useEffect(() => {
-  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
-  //     if (!user) {
-  //       router.push("/login");
-  //     } else {
-  //       setCheckingAuth(false);
-  //     }
-  //   });
-  //   return () => unsubscribe();
-  // }, [router]);
 
   const handleClick = () => {
     setOpen(true);
@@ -136,7 +124,7 @@ export default function Cart() {
           </Box>
 
           {cart.length === 0 ? (
-            <Box className="empty-cart">
+            <Box sx={{textAlign: 'center' , padding: '4rem 0', border: '1px solid #d4d4d4', borderRadius: '8px', fontSize: '1.1rem', color: '#4b5563'}}>
               <p>Your cart is empty !</p>
             </Box>
           ) : (

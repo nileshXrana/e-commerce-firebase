@@ -341,7 +341,7 @@ const UserDashboard = () => {
                         alt={activeProductInDialog.name}
                         width={405}
                         height={350}
-                        style={{objectFit: 'fill' }}
+                        style={{ objectFit: 'fill' }}
                       />
                     </Box>
                   ) : (
@@ -371,10 +371,10 @@ const UserDashboard = () => {
                   <Box sx={{ mt: 'auto', p: 2.5, bgcolor: '#f8fafc', borderRadius: '8px', border: '1px solid #e5e7eb' }}>
                     <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 1, color: '#1f2937' }}>
                       Buy Now
-                    </Typography> 
+                    </Typography>
 
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                      {isDialogItemAdded ? `You have ${dialogQty} of this item in your cart.` : "This item is not in your cart yet."} 
+                      {isDialogItemAdded ? `You have ${dialogQty} of this item in your cart.` : "This item is not in your cart yet."}
                     </Typography>
 
                     {!isDialogItemAdded ? (

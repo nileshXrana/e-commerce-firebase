@@ -1,0 +1,128 @@
+/* User Dashboard Layout Grid */
+.user-dashboard-wrapper {
+  display: flex;
+  min-height: calc(100vh - 64px);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Sidebar Wrapper */
+.sidebar-desktop-container {
+  width: 280px;
+  flex-shrink: 0;
+  background-color: #ffffff;
+  border-right: 1px solid #e5e7eb;
+}
+
+.sticky-sidebar-content {
+  position: sticky;
+  top: 64px; /* Docked right under navbar */
+  height: calc(100vh - 64px);
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+/* Scrollbar styles for clean aesthetic */
+.sticky-sidebar-content::-webkit-scrollbar {
+  width: 5px;
+}
+
+.sticky-sidebar-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sticky-sidebar-content::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.sticky-sidebar-content::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Sidebar Card Styling - make it flat and take full space */
+.filter-card {
+  background-color: #ffffff;
+  padding: 24px;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.filter-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 24px;
+}
+
+.filter-section {
+  margin-bottom: 24px;
+}
+
+.filter-section-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6b7280;
+  margin-bottom: 12px;
+}
+
+.seller-checkbox-group {
+  max-height: 160px;
+  overflow-y: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px;
+  background-color: #f9fafb;
+}
+
+.seller-checkbox-group::-webkit-scrollbar {
+  width: 4px;
+}
+
+.seller-checkbox-group::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.seller-checkbox-group::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 2px;
+}
+
+.price-inputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.price-input {
+  flex: 1;
+}
+
+.clear-btn-container {
+  margin-top: 24px;
+}
+
+/* Content Area */
+.products-content-area {
+  flex-grow: 1;
+  padding: 24px 32px;
+  box-sizing: border-box;
+}
+
+/* Header summary */
+.results-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.results-count {
+  font-size: 0.95rem;
+  color: #4b5563;
+  font-weight: 500;
+}

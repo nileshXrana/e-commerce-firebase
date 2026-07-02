@@ -29,7 +29,7 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable}`}
     >
-      <body>
+      <body suppressHydrationWarning>
         <AppRouterCacheProvider>
 
             <Navbar />

@@ -13,15 +13,40 @@ import Badge from '@mui/material/Badge';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Link from 'next/link';
 import { signOut, onAuthStateChanged } from "firebase/auth";
-import { auth } from "@/app/services/firebase.service";
-import { useRouter } from 'next/navigation';
-import Drawer from '../Drawer/Drawer';
+import { auth, db } from "@/app/services/firebase.service";
+import { doc, getDoc } from "firebase/firestore";
+import { useRouter, usePathname } from 'next/navigation';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from '@mui/icons-material/Search';
+import ClearIcon from '@mui/icons-material/Clear';
 
 export default function PrimarySearchAppBar() {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const isMenuOpen = Boolean(anchorEl);
     const [user, setUser] = React.useState(null);
+    const [role, setRole] = React.useState(null);
     const [cartCount, setCartCount] = React.useState(0);
+    const [searchInput, setSearchInput] = React.useState("");
+
+    React.useEffect(() => {
+        const handleClear = () => {
+            setSearchInput("");
+        };
+        window.addEventListener("clearDashboardSearch", handleClear);
+        return () => window.removeEventListener("clearDashboardSearch", handleClear);
+    }, []);
+
+    const handleSearchInputChange = (e) => {
+        const value = e.target.value;
+        setSearchInput(value);
+        window.dispatchEvent(new CustomEvent("dashboardSearch", { detail: value }));
+    };
+
+    const handleSearchClear = () => {
+        setSearchInput("");
+        window.dispatchEvent(new CustomEvent("dashboardSearch", { detail: "" }));
+    };
 
     React.useEffect(() => {
         const savedCart = localStorage.getItem("cart");
@@ -37,6 +62,7 @@ export default function PrimarySearchAppBar() {
     }, []);
 
     const router = useRouter();
+    const pathname = usePathname();
 
     React.useEffect(() => {
         const updateCount = () => {
@@ -55,11 +81,31 @@ export default function PrimarySearchAppBar() {
     }, []);
 
     React.useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
             setUser(currentUser);
+            if (currentUser) {
+                try {
+                    const userDocRef = doc(db, "users", currentUser.uid);
+                    const userDocSnap = await getDoc(userDocRef);
+                    if (userDocSnap.exists()) {
+                        setRole(userDocSnap.data().role || "user");
+                    } else {
+                        setRole("user");
+                    }
+                } catch (error) {
+                    console.error("Error fetching user role in navbar:", error);
+                    setRole("user");
+                }
+            } else {
+                setRole("Guest / Logged Out");
+            }
         });
         return () => unsubscribe();
     }, []);
+
+    const handleToggleFilterDrawer = () => {
+        window.dispatchEvent(new Event("toggleFilterSidebar"));
+    };
 
     const handleProfileMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
@@ -122,7 +168,18 @@ export default function PrimarySearchAppBar() {
         }}>
             <AppBar position="static" sx={{bgcolor: '#000000e8'}}>
                 <Toolbar>
-                    <Drawer />
+                    {pathname === '/dashboard' && (role === 'user' || role === 'Guest / Logged Out' || !role) && (
+                        <IconButton
+                            size="large"
+                            edge="start"
+                            color="inherit"
+                            aria-label="open filters"
+                            onClick={handleToggleFilterDrawer}
+                            sx={{ mr: 1, display: { xs: 'block', md: 'none' } }}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                    )}
                     <Typography
                         variant="h6"
                         noWrap
@@ -132,6 +189,57 @@ export default function PrimarySearchAppBar() {
                             E-Commerce
                         </Link>
                     </Typography>
+                    {pathname === '/dashboard' && (role === 'user' || role === 'Guest / Logged Out' || !role) && (
+                        <Box sx={{ 
+                            flexGrow: 1, 
+                            display: 'flex', 
+                            justifyContent: 'center', 
+                            mx: { xs: 1, sm: 4 },
+                            maxWidth: { xs: 150, sm: 300, md: 500 },
+                            width: '100%'
+                        }}>
+                            <TextField
+                                fullWidth
+                                size="small"
+                                placeholder="Search products..."
+                                value={searchInput}
+                                onChange={handleSearchInputChange}
+                                slotProps={{
+                                    input: {
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <SearchIcon fontSize="small" sx={{ color: 'rgba(255,255,255,0.7)' }} />
+                                            </InputAdornment>
+                                        ),
+                                        endAdornment: searchInput && (
+                                            <InputAdornment position="end">
+                                                <ClearIcon
+                                                    fontSize="small"
+                                                    style={{ cursor: 'pointer', color: 'rgba(255,255,255,0.7)' }}
+                                                    onClick={handleSearchClear}
+                                                />
+                                            </InputAdornment>
+                                        ),
+                                        sx: {
+                                            color: 'white',
+                                            bgcolor: 'rgba(255, 255, 255, 0.15)',
+                                            borderRadius: '20px',
+                                            '&:hover': {
+                                                bgcolor: 'rgba(255, 255, 255, 0.25)',
+                                            },
+                                            '&.Mui-focused': {
+                                                bgcolor: 'rgba(255, 255, 255, 0.25)',
+                                            },
+                                            '& .MuiOutlinedInput-notchedOutline': {
+                                                border: 'none',
+                                            },
+                                            px: 1,
+                                        }
+                                    }
+                                }}
+                            />
+                        </Box>
+                    )}
                     <Box sx={{ flexGrow: 1 }} />
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <IconButton

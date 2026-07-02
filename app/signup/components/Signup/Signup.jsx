@@ -20,7 +20,6 @@ const signupSchema = z.object({
   role: z.enum(["user", "seller"], {
     errorMap: () => ({ message: "Please select a role" })
   }),
-  address: z.string().min(5, "Address must be at least 5 characters"),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords do not match",
   path: ["confirmPassword"],
@@ -50,13 +49,7 @@ export default function Signup() {
         email: data.email,
         role: data.role,
         createdAt: new Date(),
-        addresses: [
-          {
-            id: "addr_signup_default",
-            addressLine: data.address,
-            isDefault: true
-          }
-        ]
+        addresses: []
       });
       
       router.push("/dashboard");  
@@ -158,20 +151,7 @@ export default function Signup() {
               {errors.confirmPassword && <span className="field-error">{errors.confirmPassword.message}</span>}
             </Box>
 
-            <Box className="form-field">
-              <label htmlFor="address" className="form-label">
-                Address
-              </label>
-              <input
-                id="address"
-                type="text"
-                disabled={loading}
-                className="form-input"
-                placeholder="your home address"
-                {...register("address")}
-              />
-              {errors.address && <span className="field-error">{errors.address.message}</span>}
-            </Box>
+            {/* Address field removed; managed in profile/settings only */}
 
             <Box className="form-field">
               <label htmlFor="role" className="form-label">

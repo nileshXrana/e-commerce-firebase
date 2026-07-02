@@ -133,9 +133,14 @@ export default function Cart() {
                 {cart.map((item) => (
                   <Box key={item.id} className="cart-item">
                     <Box className="cart-item-image">
-                      {item.image && (
+                      {item.images && item.images.length > 0 ? (
+                        /* eslint-disable-next-line @next/next/no-img-element */
+                        <img src={item.images[0]} alt={item.name} className="image" />
+                      ) : item.image ? (
                         /* eslint-disable-next-line @next/next/no-img-element */
                         <img src={item.image} alt={item.name} className="image" />
+                      ) : (
+                        <span style={{ fontSize: '0.8rem', color: '#9ca3af' }}>No Image</span>
                       )}
                     </Box>
                     <Box className="cart-item-details">
